@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { GET } from './+server';
-import { DeckService } from '$lib/services/uuuudeckService';
+import { DeckService } from '$lib/services/deckService';
 
-describe('GET /api/uuuulang/[edition]/[version]', () => {
+describe('GET /api/lang/[edition]/[version]', () => {
     beforeEach(() => {
         vi.restoreAllMocks();
     });

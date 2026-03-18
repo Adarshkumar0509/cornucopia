@@ -1,5 +1,5 @@
-import { LocalCache } from "$lib/utils/uuuucache.js";
-import { getBlogpostByTitle } from "../../../uuuudomain/blogpost/uuuublogpostController.js";
+import { LocalCache } from "$lib/utils/cache.js";
+import { getBlogpostByTitle } from "../../../domain/blogpost/blogpostController.js";
 
 export async function load({params})
 {

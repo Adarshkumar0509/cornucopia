@@ -1,3 +1,4 @@
+import { FileSystemHelper } from '$lib/filesystem/fileSystemHelper';
 import path from "node:path";
 
 /** @type {import('./$types').PageServerLoad} */
@@ -7,15 +8,15 @@ export function load({ url }) {
 
   // Resolve the canonical path for GitHub links
   let route = url.pathname;
-  if (!route.includes(`taxonomy/${lang}`)) route = route.replace(/uuuuutaxonomy\/?/, `taxonomy/${lang}/`);
+  if (!route.includes(`taxonomy/${lang}`)) route = route.replace(/utaxonomy\/?/, `taxonomy/${lang}/`);
 
   // Resolve actual casing using FileSystemHelper
-  // @ts-expect-error
+  // @ts-expect-error --  -- pre-existing type issue
   const baseDataPath = path.join(FileSystemHelper.root, "data");
-  // @ts-expect-error
+  // @ts-expect-error --  -- pre-existing type issue
   const resolvedFullPath = FileSystemHelper.resolveCaseInsensitivePath(baseDataPath, route);
-  // @ts-expect-error
-  const truePath = path.relative(FileSystemHelper.root, resolvedFullPath).replace(/\\/uuuugu, '/');
+  // @ts-expect-error --  -- pre-existing type issue
+  const truePath = path.relative(FileSystemHelper.root, resolvedFullPath).replace(/\\/gu, '/');
 
   return {
     categories,

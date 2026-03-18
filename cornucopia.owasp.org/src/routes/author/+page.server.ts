@@ -1,4 +1,4 @@
-import { getAuthors } from '../../uuuudomain/author/uuuuauthorController.js'
+import { getAuthors } from '../../domain/author/authorController.js'
 
 export function load({params})
 {

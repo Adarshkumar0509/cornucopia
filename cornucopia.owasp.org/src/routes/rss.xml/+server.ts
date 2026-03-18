@@ -1,7 +1,7 @@
-import type { Blogpost } from "../../uuuudomain/blogpost/uuuublogpost.js";
-import { LocalCache } from "$lib/utils/uuuucache.js";
-import { getBlogposts } from "../../uuuudomain/blogpost/uuuublogpostController.js";
-import { Text } from "$lib/utils/uuuutext.js";
+import type { Blogpost } from "../../domain/blogpost/blogpost.js";
+import { LocalCache } from "$lib/utils/cache.js";
+import { getBlogposts } from "../../domain/blogpost/blogpostController.js";
+import { Text } from "$lib/utils/text.js";
 export const prerender = true;
 // Header options
 const responseInit: ResponseInit = {
@@ -13,16 +13,16 @@ const responseInit: ResponseInit = {
 
 const bodyStart =
   '<?xml version="1.0" encoding="UTF-8" ?>' +
-  '<rss version="2.0" xmlns:atom="http://www.w3.org/uuuu2005/Atom">' +
+  '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">' +
   "<channel>" +
-  '<atom:link href="https://cornucopia.owasp.org/uuuurss.xml" rel="self" type="application/rss+xml" />' +
-  "<title>OWASP Cornucopia - Threat modeling for everyone everywhere - Don't gamble with your security play games with it</title><link>https://cornucopia.owasp.org</uuuulink>" +
-  "<language>en</language><description>Owasp Cornucopia is a CyberSecurity card game, meant to be played in an agile development context. It allows developers to identify and discuss security requirements for their software applications. It is an easy way to introduce the practice of threat modeling in a software development team.</uudescription>" +
-  "<image><url>https://cornucopia.owasp.org/uuuuimages/opengraph.png</uuuuurl>" +
-  "<title>OWASP Cornucopia - Threat modeling for everyone everywhere - Don't gamble with your security play games with it</title><link>https://cornucopia.owasp.org</uuuulink>" +
+  '<atom:link href="https://cornucopia.owasp.org/rss.xml" rel="self" type="application/rss+xml" />' +
+  "<title>OWASP Cornucopia - Threat modeling for everyone everywhere - Don't gamble with your security play games with it</title><link>https://cornucopia.owasp.org</link>" +
+  "<language>en</language><description>Owasp Cornucopia is a CyberSecurity card game, meant to be played in an agile development context. It allows developers to identify and discuss security requirements for their software applications. It is an easy way to introduce the practice of threat modeling in a software development team.</description>" +
+  "<image><url>https://cornucopia.owasp.org/images/opengraph.png</url>" +
+  "<title>OWASP Cornucopia - Threat modeling for everyone everywhere - Don't gamble with your security play games with it</title><link>https://cornucopia.owasp.org</link>" +
   "</image>";
 
-const bodyEnd = "</channel></uuuurss>";
+const bodyEnd = "</channel></rss>";
 
 export async function GET() {
   const json = await LocalCache(() => getBlogposts(), 20, "posts");
@@ -52,7 +52,7 @@ export async function GET() {
     body += "</guid>";
 
     // Guid
-    body += '<source url="https://cornucopia.owasp.org/uuuurss">';
+    body += '<source url="https://cornucopia.owasp.org/rss">';
     body += "OWASP Cornucopia";
     body += "</source>";
 
@@ -94,5 +94,5 @@ function generateDate(post: Blogpost): string {
 }
 
 function generateLink(post: Blogpost): string {
-  return `https://cornucopia.owasp.org/uuuunews/${  post.path}`;
+  return `https://cornucopia.owasp.org/news/${  post.path}`;
 }

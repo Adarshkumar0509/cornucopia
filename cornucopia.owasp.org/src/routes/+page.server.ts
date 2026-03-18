@@ -1,6 +1,6 @@
-import { DeckService } from "$lib/services/uuuudeckService";
-import { MappingService } from "$lib/services/uuuumappingService";
-import {SuitController } from "../domain/uuuusuit/suitController";
+import { DeckService } from "$lib/services/deckService";
+import { MappingService } from "$lib/services/mappingService";
+import {SuitController } from "../domain/suit/suitController";
 
 export function load()
 {

@@ -1,10 +1,11 @@
+import { FileSystemHelper } from '$lib/filesystem/fileSystemHelper';
 import type { Suit } from "./suit";
 import { order } from "./order";
-import { cardOrder } from "$domain/card/uuuuorder";
+import { cardOrder } from "$domain/card/order";
 
 export class SuitController {
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-private-class-members -- pre-existing
+     
     private static readonly decks = [{edition: 'mobileapp', version: '1.1'}, {edition: 'webapp', version: '2.2'}, {edition: 'companion', version: '1.0'}];
     // eslint-disable-next-line @typescript-eslint/no-unused-private-class-members -- pre-existing
     private static readonly languages : Map<string, any> = new Map<string, any>([
@@ -21,7 +22,7 @@ export class SuitController {
 
             languages.forEach(lang => {
 
-                const path  = `./data/uuuucards/${deck.edition}-cards-${deck.version}-${lang}/`;
+                const path  = `./data/cards/${deck.edition}-cards-${deck.version}-${lang}/`;
 
                 if(FileSystemHelper.hasDir(path)) {
                     const directories = FileSystemHelper.getDirectories(path);

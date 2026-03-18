@@ -30,7 +30,7 @@ export interface MobileAppMapping {
 }
 
 export class MappingController {
-    // eslint-disable-next-line @typescript-eslint/no-unused-private-class-members -- pre-existing
+     
     private readonly mapping: any;
 
     constructor(mapping: any) {
@@ -39,13 +39,13 @@ export class MappingController {
 
     public getWebAppCardMappings(card : string) : WebAppMapping
     {
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- pre-existing
+         
         return this.getCardMappings(card) as WebAppMapping;
     }
 
     public getMobileAppCardMappings(card : string) : MobileAppMapping
     {
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- pre-existing
+         
         return this.getCardMappings(card) as MobileAppMapping;
     }
 
@@ -62,7 +62,7 @@ export class MappingController {
             {
                 if(this.mapping.suits[i].cards[j].id === card)
                 {
-                    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- pre-existing
+                     
                     return this.mapping.suits[i].cards[j] as Mapping;
                 }
             }

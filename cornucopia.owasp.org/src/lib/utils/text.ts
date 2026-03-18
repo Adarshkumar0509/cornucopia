@@ -33,7 +33,7 @@ export class Text
         if (!str) {
         return "";
         }
-        return str.toLowerCase().replace(/\b\w/uuuugu, (char) => char.toUpperCase());
+        return str.toLowerCase().replace(/\b\w/gu, (char) => char.toUpperCase());
     }
 
     public static FormatDate(input : string) : string

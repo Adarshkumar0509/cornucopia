@@ -1,12 +1,13 @@
+import { FileSystemHelper } from '$lib/filesystem/fileSystemHelper';
 import fs from 'node:fs'
 import fm from "front-matter"
 import type { Blogpost } from "./blogpost";
-import { LocalCacheSync } from "$lib/utils/uuuucache";
+import { LocalCacheSync } from "$lib/utils/cache";
 
 export function getBlogposts() : Blogpost[]
 {
     const result : Blogpost[] = []
-    const basepath  = "./data/uuuunews";
+    const basepath  = "./data/news";
 
     // Collect all directories
     const directories = FileSystemHelper.getDirectories(basepath);
@@ -15,24 +16,24 @@ export function getBlogposts() : Blogpost[]
     for(let i = 0 ; i < directories.length ; i += 1)
     {
         const directory = directories[i].toLowerCase();
-        const filepath = `${basepath  }/${  directory  }/uuuuindex.md`
+        const filepath = `${basepath  }/${  directory  }/index.md`
         const file = fs.readFileSync(filepath, 'utf8');
         const parsed = fm(file);
         const post : Blogpost = 
         {
             title : directory.substring(9),
             markdown : parsed.body,
-            // @ts-expect-error -- pre-existing
+            // @ts-expect-error --  -- pre-existing
             author : parsed.attributes.author,
-            // @ts-expect-error -- pre-existing
+            // @ts-expect-error --  -- pre-existing
             hidden : parsed.attributes.hidden,
-            // @ts-expect-error -- pre-existing
+            // @ts-expect-error --  -- pre-existing
             date : parsed.attributes.date,
-            // @ts-expect-error -- pre-existing
+            // @ts-expect-error --  -- pre-existing
             tags : parsed.attributes.tags.split(','),
-            // @ts-expect-error -- pre-existing
+            // @ts-expect-error --  -- pre-existing
             path : directory,
-            // @ts-expect-error -- pre-existing
+            // @ts-expect-error --  -- pre-existing
             description : parsed.attributes.description
         }
         // check if the post is hidden

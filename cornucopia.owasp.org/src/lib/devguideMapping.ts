@@ -5,6 +5,6 @@ export class DevGuideMapping {
 
     public static getUrl(code : string) : string
     {
-        return data[code.replaceAll(/[0-9-]+/ugu,"") as keyof typeof data] || "";
+        return data[code.replaceAll(/[0-9-]+/gu,"") as keyof typeof data] || "";
     }
 }

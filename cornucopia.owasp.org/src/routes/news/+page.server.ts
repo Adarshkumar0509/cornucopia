@@ -1,11 +1,12 @@
-import { LocalCache } from '$lib/utils/uuuucache.js'
-import { getAuthors } from '../../uuuudomain/author/uuuuauthorController.js'
-import { getBlogposts } from '../../uuuudomain/blogpost/uuuublogpostController.js'
+import { FileSystemHelper } from '$lib/filesystem/fileSystemHelper';
+import { LocalCache } from '$lib/utils/cache.js'
+import { getAuthors } from '../../domain/author/authorController.js'
+import { getBlogposts } from '../../domain/blogpost/blogpostController.js'
 
 export async function load({params})
 {
     return {
-        content: FileSystemHelper.getDataFromPath('data/website/uuuupages/news'),
+        content: FileSystemHelper.getDataFromPath('data/website/pages/news'),
         posts : await LocalCache(()=>getBlogposts(),20,'posts'),
         authors : await LocalCache(()=>getAuthors(),20,'authors'),
     }

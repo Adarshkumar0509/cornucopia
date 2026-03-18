@@ -1,14 +1,15 @@
+import { FileSystemHelper } from '$lib/filesystem/fileSystemHelper';
 import { error } from '@sveltejs/kit';
-import { DeckService } from "$lib/services/uuuudeckService";
-import type { Route } from "$domain/routes/uuuuroute";
-import { MappingService } from "$lib/services/uuuumappingService";
-import { CapecService } from "$lib/services/uuuucapecService";
+import { DeckService } from "$lib/services/deckService";
+import type { Route } from "$domain/routes/route";
+import { MappingService } from "$lib/services/mappingService";
+import { CapecService } from "$lib/services/capecService";
 
 import type { PageServerLoad } from './$types';
 
 export const load = (({ params }) => {
-    const edition =  params.edition;
-    const version =  params.version;
+    const {edition} = params;
+    const {version} = params;
     const requestedLang = params.lang ?? 'en';
 
     const availableLanguages =DeckService.getLanguagesForEditionVersion(edition, version);

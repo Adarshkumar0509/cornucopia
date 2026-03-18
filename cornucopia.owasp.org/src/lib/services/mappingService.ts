@@ -1,14 +1,14 @@
 import fs from 'node:fs'
 import yaml from "js-yaml";
 import path from "node:path";
-import { DeckService } from "$lib/services/uuuudeckService";
+import { DeckService } from "$lib/services/deckService";
 const currentDir = path.resolve(path.dirname(''));
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class -- pre-existing
+ 
 export class MappingService {
-    // eslint-disable-next-line @typescript-eslint/no-unused-private-class-members -- pre-existing
+     
     private static mappings: object[] = [];
-    // eslint-disable-next-line @typescript-eslint/no-unused-private-class-members -- pre-existing
-    private static readonly path = '/../uuuusource/';
+     
+    private static readonly path = '/../source/';
 
     public getLatestsCardMappingData(edition: string)
     {
@@ -39,7 +39,7 @@ export class MappingService {
         const decks = new Map<string, any>();
         DeckService.getLatestEditions().forEach((edition) => {
             decks.set(
-                edition, MappingService.mappings.find((mapping) => mapping?.version === 'latests' && mapping?.edition === edition)?.data || this.getLatestsCardMappingData(edition)
+                edition, MappingService.mappings.find((mapping) => mapping !== null && mapping !== undefined && (mapping as any).version === 'latests' && (mapping as any).edition === edition)?.data || this.getLatestsCardMappingData(edition)
             );
 
             
@@ -57,10 +57,10 @@ export class MappingService {
         }
         
         DeckService.getDecks().forEach((deck) => {
-            let mappingData = MappingService.mappings.find((mapping) => mapping?.version === deck.version && mapping?.edition === deck.edition)?.data;
+            let mappingData = MappingService.mappings.find((mapping) => (mapping as any).version === deck.version && (mapping as any).edition === deck.edition)?.data;
             
             // If not found in cache, try to load it
-            if (!mappingData) {
+            if (mappingData === null || mappingData === undefined) {
                 try {
                     const yamlData = fs.readFileSync(`${currentDir}${MappingService.path}${deck.edition}-mappings-${deck.version}.yaml`, 'utf8');
                     mappingData = yaml.load(yamlData);
@@ -71,7 +71,7 @@ export class MappingService {
                 }
             }
             
-            if (mappingData) {
+            if (mappingData !== null && mappingData !== undefined) {
                 mapping.set(`${deck.edition}-${deck.version}`, mappingData);
             }
         });

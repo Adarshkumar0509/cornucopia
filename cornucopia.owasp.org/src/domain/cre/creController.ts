@@ -1,5 +1,5 @@
-import type { Card } from "../card/uuuucard";
-import type { MappingController } from "../mapping/uuuumappingController";
+import type { Card } from "../card/card";
+import type { MappingController } from "../mapping/mappingController";
 
 export interface Cre {
     doctype: string; 
@@ -25,19 +25,19 @@ export interface CreDocument {
 
 
 export class CreController {
-    // eslint-disable-next-line @typescript-eslint/no-unused-private-class-members -- pre-existing
+     
     private readonly deck: Map<string, Card>;
-    // eslint-disable-next-line @typescript-eslint/no-unused-private-class-members -- pre-existing
+     
     private readonly controller: MappingController;
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-private-class-members -- pre-existing
+     
     private static readonly editions: Map<string, string>  = new Map<string, string>( [
         ['webapp', "OWASP Cornucopia Website App Edition"],
         ['mobileapp', "OWASP Cornucopia Mobile App Edition"]
 
     ]);
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-private-class-members -- pre-existing
+     
     private static readonly category: Map<string, string>  = new Map<string, string>( [
         ['webapp', "Website Application"],
         ['mobileapp', "Mobile Application"]
@@ -50,13 +50,13 @@ export class CreController {
     }
 
     public static getEditionName(edition: string): string {
-        return CreController.editions.get(edition) || edition;
+        return CreController.editions.get(edition) ?? edition;
     }
 
     public getCreMapping(edition: string, lang: string) : any {
         if (!CreController.editions.has(edition)) return {"meta": {}, "standards": []};
         const standards: Cre[] = [];
-        (this.deck || []).forEach(
+        this.deck.forEach(
                 (card: Card) => (card.edition === edition) && standards.push(this.generateDoc(card))
             );
         return {
@@ -73,10 +73,7 @@ export class CreController {
     public generateDoc(card: Card) {
         const mapping = this.controller.getCardMappings(card.id);
         const links: Array<{ document: { doctype: string; id: string }; ltype: string }> = [];
-        const cre = mapping.owasp_cre?.owasp_asvs as [] || [];
-        if (!cre) {
-            throw Error("cre has not been defined.")
-        }
+        const cre = (mapping.owasp_cre?.owasp_asvs as string[]) ?? []
         cre.forEach((cre) => links.push({
             "document": {
                 "doctype": "CRE",

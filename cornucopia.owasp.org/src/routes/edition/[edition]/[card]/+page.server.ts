@@ -1,11 +1,12 @@
+import { FileSystemHelper } from '$lib/filesystem/fileSystemHelper';
 import { error } from '@sveltejs/kit';
-import { DeckService } from "$lib/services/uuuudeckService";
-import type { Route } from "$domain/routes/uuuuroute";
-import { MappingService } from "$lib/services/uuuumappingService";
-import { CapecService } from "$lib/services/uuuucapecService";
+import { DeckService } from "$lib/services/deckService";
+import type { Route } from "$domain/routes/route";
+import { MappingService } from "$lib/services/mappingService";
+import { CapecService } from "$lib/services/capecService";
 
 export const load = (({ params }) => {
-    const edition =  params.edition;
+    const {edition} = params;
     const version =  edition === 'webapp' ? '2.2' : edition === 'mobileapp' ? '1.1' : '1.0';
     let asvsVersion = "4.0.3";
     if (params.version === '3.0') asvsVersion = '5.0';

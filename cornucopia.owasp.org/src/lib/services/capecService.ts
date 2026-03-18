@@ -11,10 +11,10 @@ export type CapecData = Record<number, {
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class -- pre-existing
 export class CapecService {
-    // eslint-disable-next-line @typescript-eslint/no-unused-private-class-members -- pre-existing
+     
     private static readonly capecData = new Map<string, CapecData>();
-    // eslint-disable-next-line @typescript-eslint/no-unused-private-class-members -- pre-existing
-    private static readonly path = '/../uuuusource/';
+     
+    private static readonly path = '/../source/';
 
     public static getCapecData(edition: string, version: string): CapecData {
         const key = `${edition}-${version}`;

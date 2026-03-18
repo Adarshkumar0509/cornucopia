@@ -69,7 +69,7 @@ export function GetCardMappings(suit : string, card : string, addition  = 0) : M
 export function GetCardDescription(suit : string , card : string) : string
 {
     const thisCard : Card | undefined = GetCard(suit,card);
-    if(!thisCard)
+    if(thisCard === undefined)
         {return "";}
 
     return thisCard.desc
@@ -78,7 +78,7 @@ export function GetCardDescription(suit : string , card : string) : string
 export function GetCardExplanation(suit : string , card : string) : string
 {
     const thisCard : Card | undefined = GetCard(suit,card);
-    if(!thisCard)
+    if(thisCard === undefined)
         {return "";}
 
     return thisCard.desc
@@ -86,12 +86,12 @@ export function GetCardExplanation(suit : string , card : string) : string
 
 export function GetCardImageUrl(suit : string , card : string, addition  = 0) : string
 {
-    if(!suit || !card)
-        {return "/cards/uuuuall/CORNUCOPIA.png";}
+    if(suit === '' || card === '')
+        {return "/cards/all/CORNUCOPIA.png";}
 
     const thisCard : Card | undefined = GetCard(suit,card);
 
-    return `/cards/uuuuall/${  thisCard?.id  }.png`;
+    return `/cards/all/${  thisCard?.id  }.png`;
 }
 
 export interface Attack {

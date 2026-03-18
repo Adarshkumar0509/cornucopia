@@ -1,11 +1,12 @@
+import { FileSystemHelper } from '$lib/filesystem/fileSystemHelper';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { DeckService } from './deckService';
-import type { Card } from '$domain/card/uuuucard';
+import type { Card } from '$domain/card/card';
 import fs from 'node:fs';
 import { MappingService } from './mappingService';
 
 vi.mock('fs');
-vi.mock('$lib/filesystem/uuuufileSystemHelper');
+vi.mock('$lib/filesystem/fileSystemHelper');
 vi.mock('./mappingService');
 
 describe('DeckService tests', () => {

@@ -1,4 +1,4 @@
-import type { Card } from "../card/uuuucard"
+import type { Card } from "../card/card"
 
 export interface Suit { 
     name : string,

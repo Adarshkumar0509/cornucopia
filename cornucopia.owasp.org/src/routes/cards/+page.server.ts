@@ -1,6 +1,7 @@
-import { DeckService } from '$lib/services/uuuudeckService';
-import { SuitController } from '../../uuuudomain/suit/uuuusuitController';
-import { MappingService } from '$lib/services/uuuumappingService';
+import { FileSystemHelper } from '$lib/filesystem/fileSystemHelper';
+import { DeckService } from '$lib/services/deckService';
+import { SuitController } from '../../domain/suit/suitController';
+import { MappingService } from '$lib/services/mappingService';
  
 export const load = (({ params }) => {
   const deckService = new DeckService();
@@ -17,6 +18,6 @@ export const load = (({ params }) => {
     suits : SuitController.getSuits(),
     decks : decks.set(lang, new Map([...mobileCards, ...webappCards, ...companionCards])),
     mappingData: (new MappingService()).getCardMappingForLatestEdtions(),
-    content: FileSystemHelper.getDataFromPath('data/website/uuuupages/cards')
+    content: FileSystemHelper.getDataFromPath('data/website/pages/cards')
   };
 });
