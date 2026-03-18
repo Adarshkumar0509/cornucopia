@@ -1,9 +1,8 @@
-import { FileSystemHelper } from "$lib/filesystem/fileSystemHelper.js";
 
 
-export async function load({ params }) {
-    let content = FileSystemHelper.getDataFromPath('data/website/pages/about');
+export function load({ params }) {
+    const content = FileSystemHelper.getDataFromPath('data/website/uuuupages/about');
     return {
-        content: content
+        content
     };
 }

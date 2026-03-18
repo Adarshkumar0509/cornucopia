@@ -1,39 +1,35 @@
-import type { Blogpost } from "../../domain/blogpost/blogpost.js";
-import { LocalCache } from "$lib/utils/cache.js";
-import { getBlogposts } from "../../domain/blogpost/blogpostController.js";
-import { Text } from "$lib/utils/text.js";
+import type { Blogpost } from "../../uuuudomain/blogpost/uuuublogpost.js";
+import { LocalCache } from "$lib/utils/uuuucache.js";
+import { getBlogposts } from "../../uuuudomain/blogpost/uuuublogpostController.js";
+import { Text } from "$lib/utils/uuuutext.js";
 export const prerender = true;
 // Header options
 const responseInit: ResponseInit = {
   headers: {
-    "Cache-Control": `max-age=0, s-max-age=${600}`,
+    "Cache-Control": `max-age=0, s-max-age=600`,
     "Content-Type": "application/xml",
   },
 };
 
-let bodyStart =
+const bodyStart =
   '<?xml version="1.0" encoding="UTF-8" ?>' +
-  '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">' +
+  '<rss version="2.0" xmlns:atom="http://www.w3.org/uuuu2005/Atom">' +
   "<channel>" +
-  '<atom:link href="https://cornucopia.owasp.org/rss.xml" rel="self" type="application/rss+xml" />' +
-  "<title>OWASP Cornucopia - Threat modeling for everyone everywhere - Don't gamble with your security play games with it</title>" +
-  "<link>https://cornucopia.owasp.org</link>" +
-  "<language>en</language>" +
-  "<description>Owasp Cornucopia is a CyberSecurity card game, meant to be played in an agile development context. It allows developers to identify and discuss security requirements for their software applications. It is an easy way to introduce the practice of threat modeling in a software development team.</description>" +
-  "<image>" +
-  "<url>https://cornucopia.owasp.org/images/opengraph.png</url>" +
-  "<title>OWASP Cornucopia - Threat modeling for everyone everywhere - Don't gamble with your security play games with it</title>" +
-  "<link>https://cornucopia.owasp.org</link>" +
+  '<atom:link href="https://cornucopia.owasp.org/uuuurss.xml" rel="self" type="application/rss+xml" />' +
+  "<title>OWASP Cornucopia - Threat modeling for everyone everywhere - Don't gamble with your security play games with it</title><link>https://cornucopia.owasp.org</uuuulink>" +
+  "<language>en</language><description>Owasp Cornucopia is a CyberSecurity card game, meant to be played in an agile development context. It allows developers to identify and discuss security requirements for their software applications. It is an easy way to introduce the practice of threat modeling in a software development team.</uudescription>" +
+  "<image><url>https://cornucopia.owasp.org/uuuuimages/opengraph.png</uuuuurl>" +
+  "<title>OWASP Cornucopia - Threat modeling for everyone everywhere - Don't gamble with your security play games with it</title><link>https://cornucopia.owasp.org</uuuulink>" +
   "</image>";
 
-let bodyEnd = "</channel>" + "</rss>";
+const bodyEnd = "</channel></uuuurss>";
 
 export async function GET() {
-  let json = await LocalCache(() => getBlogposts(), 20, "posts");
+  const json = await LocalCache(() => getBlogposts(), 20, "posts");
 
   let body: string = bodyStart;
-  for (let i = 0; i < json.length; i++) {
-    let post: Blogpost = json[i];
+  for (const i of json) {
+    const post: Blogpost = json[i];
     body += "<item>";
 
     // Title
@@ -56,12 +52,12 @@ export async function GET() {
     body += "</guid>";
 
     // Guid
-    body += '<source url="https://cornucopia.owasp.org/rss">';
+    body += '<source url="https://cornucopia.owasp.org/uuuurss">';
     body += "OWASP Cornucopia";
     body += "</source>";
 
     // Category
-    for (let j = 0; j < post.tags.length; j++) {
+    for (const j of post.tags) {
       body += "<category>";
       body += post.tags[j].trim();
       body += "</category>";
@@ -80,23 +76,23 @@ export async function GET() {
 }
 
 function generateDescription(post: Blogpost) {
-  let desc: string = post.description?.slice(0, 200)+ "...";
+  const desc = `${post.description?.slice(0, 200) }...`;
   return desc;
 }
 
 function generateDate(post: Blogpost): string {
-  let date: string = post.date.toString();
-  let year = date.slice(0, 4);
-  let month = date.slice(4, 2);
-  let day = date.slice(6, 2);
+  const date: string = post.date;
+  const year = date.slice(0, 4);
+  const month = date.slice(4, 2);
+  const day = date.slice(6, 2);
 
-  let d: Date = new Date();
-  d.setDate(Number.parseInt(day));
-  d.setMonth(Number.parseInt(month));
-  d.setFullYear(Number.parseInt(year));
+  const d: Date = new Date();
+  d.setDate(Number.parseInt(day, 10));
+  d.setMonth(Number.parseInt(month, 10));
+  d.setFullYear(Number.parseInt(year, 10));
   return d.toUTCString();
 }
 
 function generateLink(post: Blogpost): string {
-  return "https://cornucopia.owasp.org/news/" + post.path;
+  return `https://cornucopia.owasp.org/uuuunews/${  post.path}`;
 }

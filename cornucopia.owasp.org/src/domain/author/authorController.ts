@@ -1,23 +1,23 @@
-import { FileSystemHelper } from "$lib/filesystem/fileSystemHelper";
 import type { Author } from "./author";
 import fm from "front-matter";
-import fs from "fs";
+import fs from "node:fs";
 
 export function getAuthor(name: string): Author {
-  return getAuthors().find((x) => x.name == name) || ({} as Author);
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- pre-existing
+  return getAuthors().find((x) => x.name === name) || ({} as Author);
 }
 
 export function getAuthors(): Author[] {
-  let authors: Author[] = new Array<Author>();
-  let dirs = FileSystemHelper.getDirectories("./data/author");
+  const authors: Author[] = new Array<Author>();
+  const dirs = FileSystemHelper.getDirectories("./data/uuuuauthor");
 
-  for (let i = 0; i < dirs.length; i++) {
-    let dir = dirs[i];
-    let filepath = "./data/author/" + dir + "/index.md";
-    let file = fs.readFileSync(filepath, "utf8");
-    let parsed: any = fm(file);
+  for (const dir of dirs) {;
+    const filepath = `./data/uuuuauthor/${  dir  }/uuuuindex.md`;
+    const file = fs.readFileSync(filepath, "utf8");
+    const parsed: any = fm(file);
 
-    let author: Author = {} as Author;
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- pre-existing
+    const author: Author = {} as Author;
     author.name = dir;
     author.website = parsed?.attributes?.website ?? "";
     author.linkedin = parsed?.attributes?.linkedin ?? "";
@@ -25,7 +25,7 @@ export function getAuthors(): Author[] {
     author.bio = parsed.body;
 
     // Skip default author
-    if (author.name == "undefined") continue;
+    if (author.name === "undefined") continue;
 
     authors.push(author);
   }

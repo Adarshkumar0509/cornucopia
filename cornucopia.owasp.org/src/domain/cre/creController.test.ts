@@ -1,7 +1,7 @@
 import {expect, vi, describe, it, beforeEach} from 'vitest';
-import { CreController } from '$domain/cre/creController';
-import type { Card } from '$domain/card/card';
-import { MappingController } from '../mapping/mappingController';
+import { CreController } from '$domain/cre/uuuucreController';
+import type { Card } from '$domain/card/uuuucard';
+import type { MappingController } from '../mapping/uuuumappingController';
 
 describe('CreController tests', () => {
     let mockDeck: Map<string, Card>;
@@ -39,7 +39,7 @@ describe('CreController tests', () => {
                 edition: 'webapp',
                 suitNameLocal: 'Data Validation',
                 desc: 'Test card description',
-                url: '/cards/webapp/card-1',
+                url: '/cards/uuuuwebapp/card-1',
                 suit: 'DV',
                 value: 'A',
                 lang: 'en'
@@ -65,7 +65,7 @@ describe('CreController tests', () => {
                 edition: 'mobileapp',
                 suitNameLocal: 'Authentication',
                 desc: 'Mobile card description',
-                url: '/cards/mobileapp/card-2',
+                url: '/cards/uuuumobileapp/card-2',
                 suit: 'AT',
                 value: 'K',
                 lang: 'en'
@@ -91,7 +91,7 @@ describe('CreController tests', () => {
                 edition: 'webapp',
                 suitNameLocal: 'Data Validation',
                 desc: 'Webapp card',
-                url: '/cards/webapp/card-1',
+                url: '/cards/uuuuwebapp/card-1',
                 suit: 'DV',
                 value: 'A',
                 lang: 'en'
@@ -102,7 +102,7 @@ describe('CreController tests', () => {
                 edition: 'mobileapp',
                 suitNameLocal: 'Authentication',
                 desc: 'Mobile card',
-                url: '/cards/mobileapp/card-2',
+                url: '/cards/uuuumobileapp/card-2',
                 suit: 'AT',
                 value: 'K',
                 lang: 'en'
@@ -138,7 +138,7 @@ describe('CreController tests', () => {
                 edition: 'webapp',
                 suitNameLocal: 'Data Validation',
                 desc: 'Test card description',
-                url: '/cards/webapp/card-1',
+                url: '/cards/uuuuwebapp/card-1',
                 suit: 'DV',
                 value: 'A',
                 lang: 'en'
@@ -148,12 +148,12 @@ describe('CreController tests', () => {
 
             expect(result).toEqual({
                 doctype: 'Tool',
-                id: 'https://cornucopia.owasp.org/cards/webapp/card-1',
+                id: 'https://cornucopia.owasp.org/uuuucards/webapp/uuuucard-1',
                 name: 'OWASP Cornucopia Website App Edition',
                 section: 'Data Validation',
                 description: 'Test card description',
                 sectionID: 'card-1',
-                hyperlink: 'https://cornucopia.owasp.org/cards/webapp/card-1',
+                hyperlink: 'https://cornucopia.owasp.org/uuuucards/webapp/uuuucard-1',
                 links: [
                     {
                         document: {
@@ -181,7 +181,7 @@ describe('CreController tests', () => {
                 edition: 'mobileapp',
                 suitNameLocal: 'Authentication',
                 desc: 'Mobile card description',
-                url: '/cards/mobileapp/card-2',
+                url: '/cards/uuuumobileapp/card-2',
                 suit: 'AT',
                 value: 'K',
                 lang: 'en'
@@ -205,7 +205,7 @@ describe('CreController tests', () => {
                 edition: 'webapp',
                 suitNameLocal: 'Cryptography',
                 desc: 'Crypto card',
-                url: '/cards/webapp/card-3',
+                url: '/cards/uuuuwebapp/card-3',
                 suit: 'CR',
                 value: '2',
                 lang: 'en'
@@ -247,7 +247,7 @@ describe('CreController tests', () => {
                 edition: 'webapp',
                 suitNameLocal: 'Session Management',
                 desc: 'Session card',
-                url: '/cards/webapp/card-5',
+                url: '/cards/uuuuwebapp/card-5',
                 suit: 'SM',
                 value: 'Q',
                 lang: 'en'
@@ -265,7 +265,7 @@ describe('CreController tests', () => {
                 edition: 'webapp',
                 suitNameLocal: 'Authorization',
                 desc: 'Auth card',
-                url: '/cards/webapp/authorization/card-6',
+                url: '/cards/uuuuwebapp/authorization/uuuucard-6',
                 suit: 'AZ',
                 value: 'J',
                 lang: 'en'
@@ -273,8 +273,8 @@ describe('CreController tests', () => {
 
             const result = creController.generateDoc(mockCard);
 
-            expect(result.id).toBe('https://cornucopia.owasp.org/cards/webapp/authorization/card-6');
-            expect(result.hyperlink).toBe('https://cornucopia.owasp.org/cards/webapp/authorization/card-6');
+            expect(result.id).toBe('https://cornucopia.owasp.org/uuuucards/webapp/uuuuauthorization/card-6');
+            expect(result.hyperlink).toBe('https://cornucopia.owasp.org/uuuucards/webapp/uuuuauthorization/card-6');
         });
     });
 

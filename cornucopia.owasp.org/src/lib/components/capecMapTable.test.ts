@@ -137,23 +137,21 @@ describe('capecMapTable component tests', () => {
 
     describe('link generation logic', () => {
         it('should generate correct CAPEC taxonomy link', () => {
-            const linkCapec = (id: number): string => {
-                return `/taxonomy/capec-3.9/${id}`;
-            };
+            const linkCapec = (id: number): string => `/taxonomy/uuuucapec-3.9/${id}`;
 
-            expect(linkCapec(1)).toBe('/taxonomy/capec-3.9/1');
-            expect(linkCapec(54)).toBe('/taxonomy/capec-3.9/54');
-            expect(linkCapec(999)).toBe('/taxonomy/capec-3.9/999');
+            expect(linkCapec(1)).toBe('/taxonomy/uuuucapec-3.9/1');
+            expect(linkCapec(54)).toBe('/taxonomy/uuuucapec-3.9/54');
+            expect(linkCapec(999)).toBe('/taxonomy/uuuucapec-3.9/999');
         });
 
         it('should handle ASVS link generation', () => {
             const mockLinkASVS = (input: string): string => {
                 const searchString = input.split("-")[0];
-                return `/taxonomy/asvs-5.0/test#V${input}`;
+                return `/taxonomy/uuuuasvs-5.0/test#V${input}`;
             };
 
-            expect(mockLinkASVS('13.2.2')).toBe('/taxonomy/asvs-5.0/test#V13.2.2');
-            expect(mockLinkASVS('4.3.2')).toBe('/taxonomy/asvs-5.0/test#V4.3.2');
+            expect(mockLinkASVS('13.2.2')).toBe('/taxonomy/uuuuasvs-5.0/test#V13.2.2');
+            expect(mockLinkASVS('4.3.2')).toBe('/taxonomy/uuuuasvs-5.0/test#V4.3.2');
         });
     });
 

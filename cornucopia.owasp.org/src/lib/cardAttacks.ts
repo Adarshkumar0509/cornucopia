@@ -1,13 +1,11 @@
 import attacks from '$lib/attacks.json'
 
-export type Card = 
-{
+export interface Card {
     id : string,
     desc : string,
 }
 
-export type Mapping = 
-{
+export interface Mapping {
     id : string,
     owasp_dev_guide : number[],
     stride : string[],
@@ -20,15 +18,16 @@ export type Mapping =
 
 export function GetCard(suit : string, card : string) : Card | undefined
 {
+    // eslint-disable-next-line no-param-reassign -- pre-existing
     suit = parseSuit(suit);
 
-    for(let i = 0 ; i < data.suits.length ; i++)
+    for(let i = 0 ; i < data.suits.length ; i += 1)
     {
-        if(data.suits[i].name.toLowerCase() == suit.toLowerCase())
+        if(data.suits[i].name.toLowerCase() === suit.toLowerCase())
         {
-            for(let j = 0 ; j < data.suits[i].cards.length ; j++)
+            for(let j = 0 ; j < data.suits[i].cards.length ; j += 1)
             {
-                if(data.suits[i].cards[j].id == card)
+                if(data.suits[i].cards[j].id === card)
                 {
                     return data.suits[i].cards[j] as Card;
                 }
@@ -39,22 +38,24 @@ export function GetCard(suit : string, card : string) : Card | undefined
 
 function parseSuit(suit : string) : string
 {
+    // eslint-disable-next-line no-param-reassign -- pre-existing
     suit = suit.replaceAll("-" , " ");
     return suit;
 
 }
 
-export function GetCardMappings(suit : string, card : string, addition : number = 0) : Mapping | undefined
+export function GetCardMappings(suit : string, card : string, addition  = 0) : Mapping | undefined
 {
+    // eslint-disable-next-line no-param-reassign -- pre-existing
     suit = parseSuit(suit);
 
-    for(let i = 0 ; i < mappings.suits.length ; i++)
+    for(let i = 0 ; i < mappings.suits.length ; i += 1)
     {
-        if(mappings.suits[i].name.toLowerCase() == suit.toLowerCase())
+        if(mappings.suits[i].name.toLowerCase() === suit.toLowerCase())
         {
-            for(let j = 0 ; j < mappings.suits[i].cards.length ; j++)
+            for(let j = 0 ; j < mappings.suits[i].cards.length ; j += 1)
             {
-                if(mappings.suits[i].cards[j].id == card)
+                if(mappings.suits[i].cards[j].id === card)
                 {
                     return mappings.suits[i].cards[j] as Mapping;
                 }
@@ -67,52 +68,51 @@ export function GetCardMappings(suit : string, card : string, addition : number 
 
 export function GetCardDescription(suit : string , card : string) : string
 {
-    let thisCard : Card | undefined = GetCard(suit,card);
+    const thisCard : Card | undefined = GetCard(suit,card);
     if(!thisCard)
-        return "";
+        {return "";}
 
     return thisCard.desc
 }
 
 export function GetCardExplanation(suit : string , card : string) : string
 {
-    let thisCard : Card | undefined = GetCard(suit,card);
+    const thisCard : Card | undefined = GetCard(suit,card);
     if(!thisCard)
-        return "";
+        {return "";}
 
     return thisCard.desc
 }
 
-export function GetCardImageUrl(suit : string , card : string, addition : number = 0) : string
+export function GetCardImageUrl(suit : string , card : string, addition  = 0) : string
 {
     if(!suit || !card)
-        return "/cards/all/CORNUCOPIA.png";
+        {return "/cards/uuuuall/CORNUCOPIA.png";}
 
-    let thisCard : Card | undefined = GetCard(suit,card);
+    const thisCard : Card | undefined = GetCard(suit,card);
 
-    return '/cards/all/' + thisCard?.id + '.png';
+    return `/cards/uuuuall/${  thisCard?.id  }.png`;
 }
 
-export type Attack = 
-{
+export interface Attack {
     name : string,
     url : string
 }
 
 export function GetCardAttacks(card : string) : Attack[]
 {
-    let id = card;
-    let result : Attack[] = []
+    const id = card;
+    const result : Attack[] = []
 
-    for(let i = 0 ; i < attacks.list.length ; i++)
+    for(let i = 0 ; i < attacks.list.length ; i += 1)
     {
-        let attack = attacks.list[i];
-        for(let j = 0 ; j < attack.cards.length ; j++)
+        const attack = attacks.list[i];
+        for(let j = 0 ; j < attack.cards.length ; j += 1)
         {
-            let sampleID = attack.cards[j];
-            if(id == sampleID)
+            const sampleID = attack.cards[j];
+            if(id === sampleID)
             {
-                result.push({name : attack.name,url : '../attacks/' + attack.url})
+                result.push({name : attack.name,url : `../attacks/${  attack.url}`})
             }
         }
     }

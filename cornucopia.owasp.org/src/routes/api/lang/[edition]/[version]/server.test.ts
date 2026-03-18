@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { GET } from './+server';
-import { DeckService } from '$lib/services/deckService';
+import { DeckService } from '$lib/services/uuuudeckService';
 
-describe('GET /api/lang/[edition]/[version]', () => {
+describe('GET /api/uuuulang/[edition]/[version]', () => {
     beforeEach(() => {
         vi.restoreAllMocks();
     });
@@ -39,7 +39,7 @@ describe('GET /api/lang/[edition]/[version]', () => {
         vi.spyOn(DeckService, 'getLatestEditions').mockReturnValue(['webapp', 'mobileapp']);
 
         try {
-            GET({
+            void GET({
                 params: { edition: 'unknown', version: '3.0' }
             } as any);
 
@@ -56,7 +56,7 @@ describe('GET /api/lang/[edition]/[version]', () => {
         vi.spyOn(DeckService, 'getVersions').mockReturnValue(['2.2', '3.0']);
 
         try {
-            GET({
+            void GET({
                 params: { edition: 'webapp', version: '1.0' }
             } as any);
 
@@ -71,7 +71,7 @@ describe('GET /api/lang/[edition]/[version]', () => {
         vi.spyOn(DeckService, 'getLatestEditions').mockReturnValue(['webapp', 'mobileapp']);
 
         try {
-            GET({
+            void GET({
                 params: { version: '3.0' }
             } as any);
 
@@ -87,7 +87,7 @@ describe('GET /api/lang/[edition]/[version]', () => {
         vi.spyOn(DeckService, 'getVersions').mockReturnValue(['2.2', '3.0']);
 
         try {
-            GET({
+            void GET({
                 params: { edition: 'webapp' }
             } as any);
 

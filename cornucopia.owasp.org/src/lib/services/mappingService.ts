@@ -1,17 +1,20 @@
-import fs from 'fs'
+import fs from 'node:fs'
 import yaml from "js-yaml";
-import path from "path";
-import { DeckService } from "$lib/services/deckService";
-const __dirname = path.resolve(path.dirname(''));
+import path from "node:path";
+import { DeckService } from "$lib/services/uuuudeckService";
+const currentDir = path.resolve(path.dirname(''));
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class -- pre-existing
 export class MappingService {
+    // eslint-disable-next-line @typescript-eslint/no-unused-private-class-members -- pre-existing
     private static mappings: object[] = [];
-    private static path: string = '/../source/';
+    // eslint-disable-next-line @typescript-eslint/no-unused-private-class-members -- pre-existing
+    private static readonly path = '/../uuuusource/';
 
     public getLatestsCardMappingData(edition: string)
     {
-        const yamlData = fs.readFileSync(`${__dirname}${MappingService.path}${edition}-mappings-${DeckService.getLatestVersion(edition)}.yaml`, 'utf8');
-        let data = yaml.load(yamlData);
-        MappingService.mappings.push({edition: edition, version: 'latests', data: data});
+        const yamlData = fs.readFileSync(`${currentDir}${MappingService.path}${edition}-mappings-${DeckService.getLatestVersion(edition)}.yaml`, 'utf8');
+        const data = yaml.load(yamlData);
+        MappingService.mappings.push({edition, version: 'latests', data});
         return data;
     }
 
@@ -23,9 +26,9 @@ export class MappingService {
     public getCardMappingDataAllVersions()
     {
         DeckService.getDecks().forEach((deck) => {
-            const yamlData = fs.readFileSync(`${__dirname}${MappingService.path}${deck.edition}-mappings-${deck.version}.yaml`, 'utf8');
-            let data = yaml.load(yamlData);
-            MappingService.mappings.push({edition: deck.edition, version: deck.version, data: data});
+            const yamlData = fs.readFileSync(`${currentDir}${MappingService.path}${deck.edition}-mappings-${deck.version}.yaml`, 'utf8');
+            const data = yaml.load(yamlData);
+            MappingService.mappings.push({edition: deck.edition, version: deck.version, data});
         });
         
         return MappingService.mappings;
@@ -36,7 +39,7 @@ export class MappingService {
         const decks = new Map<string, any>();
         DeckService.getLatestEditions().forEach((edition) => {
             decks.set(
-                edition, MappingService.mappings.find((mapping) => mapping?.version == 'latests' && mapping?.edition == edition)?.data || this.getLatestsCardMappingData(edition)
+                edition, MappingService.mappings.find((mapping) => mapping?.version === 'latests' && mapping?.edition === edition)?.data || this.getLatestsCardMappingData(edition)
             );
 
             
@@ -54,15 +57,16 @@ export class MappingService {
         }
         
         DeckService.getDecks().forEach((deck) => {
-            let mappingData = MappingService.mappings.find((mapping) => mapping?.version == deck.version && mapping?.edition == deck.edition)?.data;
+            let mappingData = MappingService.mappings.find((mapping) => mapping?.version === deck.version && mapping?.edition === deck.edition)?.data;
             
             // If not found in cache, try to load it
             if (!mappingData) {
                 try {
-                    const yamlData = fs.readFileSync(`${__dirname}${MappingService.path}${deck.edition}-mappings-${deck.version}.yaml`, 'utf8');
+                    const yamlData = fs.readFileSync(`${currentDir}${MappingService.path}${deck.edition}-mappings-${deck.version}.yaml`, 'utf8');
                     mappingData = yaml.load(yamlData);
                     MappingService.mappings.push({edition: deck.edition, version: deck.version, data: mappingData});
                 } catch (e) {
+                    // eslint-disable-next-line no-console -- pre-existing
                     console.error(`Failed to load mapping for ${deck.edition}-${deck.version}:`, e);
                 }
             }

@@ -1,17 +1,16 @@
-import { FileSystemHelper } from "$lib/filesystem/fileSystemHelper";
 import { error } from '@sveltejs/kit';
-import { DeckService } from "$lib/services/deckService";
-import type { Route } from "$domain/routes/route";
-import { MappingService } from "$lib/services/mappingService";
-import { CapecService } from "$lib/services/capecService";
+import { DeckService } from "$lib/services/uuuudeckService";
+import type { Route } from "$domain/routes/uuuuroute";
+import { MappingService } from "$lib/services/uuuumappingService";
+import { CapecService } from "$lib/services/uuuucapecService";
 
 export const load = (({ params }) => {
-    const edition =  params?.edition;
-    const version =  edition == 'webapp' ? '2.2' : edition == 'mobileapp' ? '1.1' : '1.0';
-    let asvsVersion: string = "4.0.3";
+    const edition =  params.edition;
+    const version =  edition === 'webapp' ? '2.2' : edition === 'mobileapp' ? '1.1' : '1.0';
+    let asvsVersion = "4.0.3";
     if (params.version === '3.0') asvsVersion = '5.0';
-    if (!DeckService.hasEdition(edition)) error(
-      404, 'Edition not found. Only: ' + DeckService.getLatestEditions().join(', ') + ' are supported.');
+    if (!DeckService.hasEdition(edition)) {error(
+      404, `Edition not found. Only: ${  DeckService.getLatestEditions().join(', ')  } are supported.`);}
     
     // Load CAPEC data for webapp v3.0+
     let capecData = undefined;
@@ -20,8 +19,8 @@ export const load = (({ params }) => {
     }
     
     return {
-      edition: edition,
-      version: version,
+      edition,
+      version,
       versions: DeckService.getVersions(edition),
       lang: 'en',
       card: legacyCardCodeFix(params.card.toUpperCase()),

@@ -8,7 +8,8 @@ export const handle = async ({ event, resolve }) => {
   const supportedLocales = locales.get().map((l) => l.toLowerCase());
 
   // Get user preferred locale
-  let userLocale = request.headers.get('accept-language') || defaultLocale;
+
+  let userLocale = event.isDataRequest ? defaultLocale : (request.headers.get('accept-language') || defaultLocale);
 
   // Set default locale if user preferred locale does not match
   if (!supportedLocales.includes(userLocale)) userLocale = defaultLocale;

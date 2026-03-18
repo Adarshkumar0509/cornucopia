@@ -1,436 +1,464 @@
-<script lang="ts">
-    import { goto } from "$app/navigation";
-    import { fade } from "svelte/transition";
+﻿<script lang="ts">
+    import { page } from "$app/stores";
     import { AddLink, type Link } from "./utils";
-    import {readTranslation} from "$lib/stores/stores";
+    import { readTranslation, readLang } from "$lib/stores/stores";
+
+    let {} = $props();
+
     let t = readTranslation();
-    let width: number = $state();
-    let height: number = $state();
+    let lang = readLang();
 
-    let mainMenu : Link[] = [];
-    AddLink(mainMenu,$t('home.title'),"/");
-    AddLink(mainMenu,$t('play.title'),"/how-to-play");
-    AddLink(mainMenu,$t('cards.title'),"/cards");
-    AddLink(mainMenu,$t('taxonomy.title'),"/taxonomy");
-    AddLink(mainMenu,$t('news.title'),"/news");
-    AddLink(mainMenu,$t('about.title'),"/about");
-    
-    let subMenu : Link[] = [];
-    AddLink(subMenu,$t('source.title'),"/source");
-    AddLink(subMenu,$t('printing.title'),"/printing");
-    AddLink(subMenu,$t('copi.title'),"/copi");
-    AddLink(subMenu,$t('swags.title'),"/swags");
-    AddLink(subMenu,$t('webshop.title'),"/webshop");
+    let mainMenu: Link[] = [];
+    AddLink(mainMenu, ($t as any)('home.title'), "/");
+    AddLink(mainMenu, ($t as any)('play.title'), "/how-to-play");
+    AddLink(mainMenu, ($t as any)('cards.title'), "/cards");
+    AddLink(mainMenu, ($t as any)('taxonomy.title'), "/taxonomy");
+    AddLink(mainMenu, ($t as any)('news.title'), "/news");
+    AddLink(mainMenu, ($t as any)('about.title'), "/about");
 
-    function toggleMenu()
-    {
-        let menuButton = document.getElementsByClassName('mobile-nav-button');
-        for (const item of menuButton) item.checked = false;
+    let subMenu: Link[] = [];
+    AddLink(subMenu, ($t as any)('source.title'), "/source");
+    AddLink(subMenu, ($t as any)('printing.title'), "/printing");
+    AddLink(subMenu, ($t as any)('copi.title'), "/copi");
+    AddLink(subMenu, ($t as any)('swags.title'), "/swags");
+    AddLink(subMenu, ($t as any)('webshop.title'), "/webshop");
+
+    const languages = [
+        { code: 'en', label: 'English' },
+        { code: 'es', label: 'Espanol' },
+        { code: 'fr', label: 'Francais' },
+        { code: 'pt', label: 'Portugues' },
+        { code: 'ja', label: 'Japanese' },
+    ];
+
+    function isActive(href: string): boolean {
+        if (href === '/') return $page.url.pathname === '/';
+        return $page.url.pathname.startsWith(href);
     }
-
 </script>
 
-<svelte:window bind:innerWidth={width} bind:innerHeight={height} />
-<header id="menu">
-    <nav>
-        <div id="mobile-menu">
-            <input class="mobile-nav-button" in:fade type="checkbox" />
-            <ul class="mobile-menu">
-                <li>
-                    <ul>
-                        {#each [...mainMenu].reverse() as link}
-                        <li>
-                            <button class="link-mobile" onclick={()=>{toggleMenu();goto(link.href)}}><span>{link.name}</span></button>
-                        </li>
-                        {/each}
-                        {#each [...subMenu].reverse() as link}
-                        <li>
-                            <button class="link-mobile" onclick={()=>{toggleMenu();goto(link.href)}}><span>{link.name}</span></button>
-                        </li>
-                        {/each}
-                    </ul>
-                </li>
-            </ul>
-        </div>
-        <ul class="desktop-menu">
+<header id="main-header">
+    <!-- Hidden checkbox controls mobile menu via CSS -->
+    <input type="checkbox" id="menu-toggle" class="menu-toggle-input" aria-hidden="true" />
+    <input type="checkbox" id="lang-toggle" class="lang-toggle-input" aria-hidden="true" />
+
+    <nav aria-label="Main navigation">
+        <a class="logo" href="/" aria-label="OWASP Cornucopia Home">
+            <img src="/images/cornucopia_logo_white.svg" alt="OWASP Cornucopia" class="logo-img" />
+        </a>
+
+        <ul class="desktop-menu" role="list">
             {#each mainMenu as link}
-                <li class="general-menu">
-                    <a class="link" href="{link.href}"><div>{link.name}</div></a>
+                <li>
+                    <a
+                        class="nav-link"
+                        class:active={isActive(link.href)}
+                        href={link.href}
+                        aria-current={isActive(link.href) ? 'page' : undefined}
+                    >
+                        {link.name}
+                    </a>
                 </li>
             {/each}
-                <li class="sub-menu">
-                    <a in:fade class="link get-game" href="#menu"><div>{$t('getthegame.title')}</div></a>
-                    <div>
-                        <ul class="sub-menu">
-                        {#each subMenu as link}
-                             <li><a class="link sub-menu" href="{link.href}"><div>{link.name}</div></a></li>
-                        {/each}
-                        </ul>
-                    </div>
+
+            <li class="dropdown-wrap">
+                <input type="checkbox" id="sub-toggle" class="sub-toggle-input" aria-hidden="true" />
+                <label for="sub-toggle" class="nav-link get-game-btn">
+                    {($t as any)('getthegame.title')} v
+                </label>
+                <ul class="dropdown-menu" role="menu">
+                    {#each subMenu as link}
+                        <li role="none">
+                            <a class="dropdown-item" href={link.href} role="menuitem">
+                                {link.name}
+                            </a>
+                        </li>
+                    {/each}
+                </ul>
+            </li>
+        </ul>
+
+        <div class="nav-right">
+            <div class="lang-wrap">
+                <label for="lang-toggle" class="lang-btn" aria-label="Select language">
+                    [LANG] <span class="lang-code">{($lang as any || 'en').toUpperCase()}</span>
+                </label>
+                <ul class="lang-dropdown" role="listbox" aria-label="Available languages">
+                    {#each languages as l}
+                        <li
+                            role="option"
+                            aria-selected={($lang as any || 'en') === l.code}
+                            class:selected={($lang as any || 'en') === l.code}
+                        >
+                            <a href="/{l.code}" class="lang-option">
+                                {l.label}
+                            </a>
+                        </li>
+                    {/each}
+                </ul>
+            </div>
+
+            <a class="cta-btn desktop-only" href="/copi">Play Online</a>
+
+            <label
+                for="menu-toggle"
+                class="hamburger mobile-only"
+                aria-label="Toggle menu"
+               
+                tabindex="0"
+            >
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </label>
+        </div>
+    </nav>
+
+    <!-- Mobile backdrop -->
+    <label for="menu-toggle" class="backdrop" aria-hidden="true"></label>
+
+    <!-- Mobile drawer -->
+    <nav id="mobile-drawer" class="mobile-drawer" aria-label="Mobile navigation">
+        <div class="drawer-header">
+            <img src="/images/cornucopia_logo_white.svg" alt="OWASP Cornucopia" class="drawer-logo" />
+            <span class="drawer-title">Menu</span>
+            <label for="menu-toggle" class="close-btn" tabindex="0">X</label>
+        </div>
+
+        <ul class="drawer-links" role="list">
+            {#each mainMenu as link}
+                <li>
+                    <a
+                        class="drawer-link"
+                        class:active={isActive(link.href)}
+                        href={link.href}
+                        aria-current={isActive(link.href) ? 'page' : undefined}
+                    >
+                        {link.name}
+                    </a>
                 </li>
-            </ul>
-        <a class="logo" href="/"><div><span class="desktop">OWASP</span>&nbsp;<span class="desktop mobile">Cornucopia</span></div></a>
-        
+            {/each}
+        </ul>
+
+        <div class="drawer-divider" aria-hidden="true"></div>
+        <div class="drawer-section-label">{($t as any)('getthegame.title')}</div>
+        <ul class="drawer-links" role="list">
+            {#each subMenu as link}
+                <li>
+                    <a class="drawer-link sub" href={link.href}>
+                        {link.name}
+                    </a>
+                </li>
+            {/each}
+        </ul>
+
+        <div class="drawer-divider" aria-hidden="true"></div>
+        <div class="drawer-section-label">Language</div>
+        <ul class="drawer-lang-list" role="listbox">
+            {#each languages as l}
+                <li role="option" aria-selected={($lang as any || 'en') === l.code}>
+                    <a
+                        href="/{l.code}"
+                        class="drawer-lang-option"
+                        class:selected={($lang as any || 'en') === l.code}
+                    >
+                        {l.label}
+                    </a>
+                </li>
+            {/each}
+        </ul>
+
+        <div class="drawer-cta">
+            <a class="cta-btn full" href="/copi">Play Online</a>
+        </div>
     </nav>
 </header>
 
 <style>
-    * {margin: 0;outline: none;padding-inline-start: 0;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}
-    *:after, *:before { -webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}
-    nav {  display: block;}
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* Hide checkboxes */
+    .menu-toggle-input,
+    .lang-toggle-input,
+    .sub-toggle-input { display: none; }
 
     header {
-        
-		position: sticky;
-		width: 100%;
-		z-index: 100;
-	}
-
-    header > nav {
-        display: flex;
-        flex-direction: row-reverse;
-        justify-content: flex-end;
-        justify-content: space-between;
-    }
-	
-	header > nav > ul {
-        display: flex;
-		list-style: none;
-        padding: 0;
-	}
-	
-    header > nav > ul > li {
-        flex: 0 1 auto;
-        margin: 0;
-        position: relative;
-        transition: all linear 0.1s;
-        white-space: nowrap;	
-    }
-    
-    header > nav > ul > li a + div {
-        border-radius: 0 0 2px 2px;
-        font-size: 1vw;
-        top: 3.2rem;
-        width: 14vw;
-    }
-			
-    header > nav > ul > li:hover a + div {
-        display: block;
-    }
-
-    ul.sub-menu > li > a > div {
-        padding: 0.5vw;
-    }
-    
-    header > nav > ul > li a + div > ul {
-        display: flex;
-        list-style-type: none;
-        height: 20vw;
-        border-radius: 0 0 2px 2px;
-        background-color: rgb(31, 41, 55);
-        border: 2px white solid;
-        
-    }
-				
-    header > nav > ul > li a + div > ul > li {
-        margin: 0;
-        flex-direction: column;
-    }
-					
-    header > nav > ul > li a + div > ul > li > a {
-        letter-spacing: 0.15vw;
-        padding: 0.25vw 1.5vw;
-    }
-	
-    header > nav > ul > li > a {
-        max-width: 15vw;
-        padding: 1vw 1.5vw;
-    }
-
-
-    .get-game {
-        text-align: top;
-        background-color: rgb(31, 41, 55);
-    }
-    
-
-    .link-mobile
-    {
-        color:var(--white);
-        text-decoration: none;
-        font-size: 2rem;
-        width : 100%;
-        font-family: var(--font-title);
-        text-align: center;
-        padding-top: 0;
-        padding-bottom: 0;
-        border-bottom: 1px rgba(255, 255, 255, 0.203) solid;
-    }
-    .link-mobile:hover > span {
-        opacity: 50%;
-    }
-
-    .mobile-nav-button {
-        content: url('/icons/menu.png');
-        appearance: none;
-        display: inline-flex;
-        width: 4.1rem;
-        height: 4.1rem;
-        align-self: flex-end;
-
-    }
-
-    .mobile-nav-button:checked {
-        content: url('/icons/close.png');
-
-    }
-
-    .mobile-nav-button:hover {
-        opacity: 50%;
-    }
-
-    #mobile-menu
-    {
-        display: none;
-        flex-direction: column;
-        justify-content: flex-start;
-        
-    }
-    .mobile-menu {
-        width : 100%;
-        margin-top: 0.9rem;
-        height : 30rem;
-        background-color: var(--background);
-        z-index: 100;
-        border-radius: 0 0 10px 10px;
-        padding-bottom: 1rem;
-        padding: 0 1rem 1rem;
-        
-    }
-    
-
-    input + ul.mobile-menu
-    {
-        display: none;
-        -webkit-animation: fadeOutFromNone 0.5s ease-out;
-        -moz-animation: fadeOutFromNone 0.5s ease-out;
-        -o-animation: fadeOutFromNone 0.5s ease-out;
-        animation: fadeOutFromNone 0.5s ease-out;
-    }
-
-    button
-    {
-        background: none;
-        border: none;
-        float: right;
-        padding-left: 1vw;
-        padding-top: 0.5rem;
-    }
-
-    .link
-    {
-        float:right;
-        color:#ffffff;
-        text-decoration: none;
-        padding-left: .4vw;
-        padding-right: .4vw;
-        padding-top: .5rem;
-        font-size: 1.5vw;
-        margin-top: 1rem;
-        transition: var(--transition);
-        font-weight: bold;
-    }
-    .general-menu
-    {
-        padding-top: 0.25rem;
-    }
-
-    .get-game
-    {
-        border: 2px white solid;
-        padding : .5rem;
-        margin-right: 1.5rem!important;
-        min-width: 14vw;
-    }
-    .get-game:hover
-    {
-        text-decoration: none!important;
-        background-color: white;
-        color:black;
-    }
-
-    .get-game + div
-    {
-        display: none;
-    }
-
-    .get-game:hover + div
-    {
-        display: block;
-    }
-
-    ul.sub-menu {
-        padding-inline-start: 0;
-        flex-direction: column;
-    }
-
-    a.sub-menu {
-        font-size: 1.3vw;
-        margin-left: 0.2vw;
-        padding: 0;
+        position: sticky;
+        top: 0;
         width: 100%;
-        border-radius: 0rem;
-    }
-
-    a.sub-menu:hover {
-        opacity: 100%;
-        
-        background-color: white;
-        color: rgb(31, 41, 55);
-    }
-
-    .link:hover
-    {
-        opacity: 50%;
-    }
-
-    .logo {
-        margin-top: 0.4rem;
-        width : 36vw;
-        max-width: 36vw;
-        font-size: 3vw;
-        padding: 1rem;
-        font-weight: bold;
-        text-decoration: none;
-        color:white;
-        transition: var(--transition);
-        text-transform: uppercase;
-        white-space: pre;
-        overflow: hidden;
-        
-    }
-
-    header > nav > .logo > div {
-        bottom: 1vw;
-        position: relative;
-        min-width: 18rem;
-    }
-
-
-    .logo:hover
-    {
-        opacity: 50%;
-    }
-    
-    nav
-    {
-        width : 100%;
-        height : 5rem;
+        z-index: 200;
         background-color: rgb(31, 41, 55);
-        border-bottom: 1px var(--white) solid;
+        border-bottom: 1px solid rgba(255,255,255,0.15);
     }
 
-    @media (max-aspect-ratio: 1/1) 
-    {
-        .desktop-menu {
-            display: none;
-        }
-
-        #mobile-menu
-        {
-            display: flex;
-        }
-
-        input:checked + ul.mobile-menu
-        {
-            display: flex;
-
-            -webkit-animation: fadeInFromNone 0.5s ease-out;
-            -moz-animation: fadeInFromNone 0.5s ease-out;
-            -o-animation: fadeInFromNone 0.5s ease-out;
-            animation: fadeInFromNone 0.5s ease-out;
-        }
-
-        .desktop
-        {
-            display: none;
-        }
-        .mobile
-        {
-            display: inline;
-            font-size: 8vw;
-        }
-        .logo {
-            margin-top: 0rem;
-            overflow: visible;
-        }
-
-        @-webkit-keyframes fadeInFromNone {
-            0% {
-                display: none;
-                opacity: 0;
-            }
-
-            1% {
-                display: flex;
-                opacity: 0;
-            }
-
-            100% {
-                display: flex;
-                opacity: 1;
-            }
-        }
-
-        @-moz-keyframes fadeInFromNone {
-            0% {
-                display: none;
-                opacity: 0;
-            }
-
-            1% {
-                display: flex;
-                opacity: 0;
-            }
-
-            100% {
-                display: flex;
-                opacity: 1;
-            }
-        }
-
-        @-o-keyframes fadeInFromNone {
-            0% {
-                display: none;
-                opacity: 0;
-            }
-
-            1% {
-                display: flex;
-                opacity: 0;
-            }
-
-            100% {
-                display: flex;
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInFromNone {
-            0% {
-                display: none;
-                opacity: 0;
-            }
-
-            1% {
-                display: flex;
-                opacity: 0;
-            }
-
-        }
+    nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 4rem;
+        padding: 0 1.5rem;
+        gap: 1rem;
     }
 
+    .logo { display: flex; align-items: center; text-decoration: none; flex-shrink: 0; }
+    .logo-img { height: 2.5rem; width: auto; }
+    .drawer-logo { height: 1.8rem; width: auto; }
 
+    .desktop-menu {
+        display: flex;
+        align-items: center;
+        list-style: none;
+        gap: 0.25rem;
+        flex: 1;
+        justify-content: center;
+    }
 
+    .nav-link {
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 500;
+        padding: 0.4rem 0.75rem;
+        border-radius: 5px;
+        transition: all 0.15s ease;
+        white-space: nowrap;
+        cursor: pointer;
+        display: block;
+    }
+    .nav-link:hover { color: white; background: rgba(255,255,255,0.1); }
+    .nav-link.active { color: #fb923c; background: rgba(232,93,4,0.15); }
 
+    /* Dropdown */
+    .dropdown-wrap { position: relative; list-style: none; }
+    .get-game-btn { border: 1px solid rgba(255,255,255,0.3); }
+    .get-game-btn:hover { border-color: white; }
+
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: calc(100% + 0.5rem);
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgb(31,41,55);
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 8px;
+        list-style: none;
+        min-width: 160px;
+        padding: 0.4rem 0;
+        z-index: 300;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    .sub-toggle-input:checked ~ .dropdown-menu { display: block; }
+    .dropdown-wrap:hover .dropdown-menu { display: block; }
+
+    .dropdown-item {
+        display: block;
+        padding: 0.5rem 1rem;
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+        font-size: 0.85rem;
+        transition: all 0.15s;
+    }
+    .dropdown-item:hover { background: rgba(255,255,255,0.08); color: white; }
+
+    /* Nav right */
+    .nav-right { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+    .lang-wrap { position: relative; }
+
+    .lang-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 5px;
+        color: rgba(255,255,255,0.85);
+        font-size: 0.8rem;
+        padding: 0.35rem 0.7rem;
+        cursor: pointer;
+        transition: all 0.15s;
+        min-height: 44px;
+    }
+    .lang-btn:hover { background: rgba(255,255,255,0.15); }
+    .lang-code { font-weight: 600; font-size: 0.75rem; }
+
+    .lang-dropdown {
+        display: none;
+        position: absolute;
+        top: calc(100% + 0.4rem);
+        right: 0;
+        background: rgb(31,41,55);
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 8px;
+        list-style: none;
+        min-width: 150px;
+        padding: 0.4rem 0;
+        z-index: 300;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    .lang-toggle-input:checked ~ nav .lang-wrap .lang-dropdown { display: block; }
+    .lang-wrap:hover .lang-dropdown { display: block; }
+
+    .lang-option {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+        font-size: 0.85rem;
+        transition: all 0.15s;
+    }
+    .lang-option:hover { background: rgba(255,255,255,0.08); color: white; }
+    li.selected .lang-option { color: #7dd3fc; }
+
+    .cta-btn {
+        background: #e85d04;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 0.45rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: background 0.15s;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
+    .cta-btn:hover { background: #c44e03; }
+    .cta-btn.full { width: 100%; justify-content: center; font-size: 0.95rem; padding: 0.75rem; }
+
+    /* Hamburger */
+    .hamburger {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        background: none;
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 6px;
+        padding: 0.5rem;
+        cursor: pointer;
+        min-width: 44px;
+        min-height: 44px;
+        align-items: center;
+    }
+
+    .bar {
+        display: block;
+        width: 20px;
+        height: 2px;
+        background: white;
+        border-radius: 2px;
+        transition: all 0.25s ease;
+        transform-origin: center;
+    }
+
+    /* Hamburger X animation when checked */
+    .menu-toggle-input:checked ~ nav .hamburger .bar:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .menu-toggle-input:checked ~ nav .hamburger .bar:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .menu-toggle-input:checked ~ nav .hamburger .bar:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    /* Backdrop */
+    .backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.55);
+        z-index: 250;
+        cursor: pointer;
+    }
+    .menu-toggle-input:checked ~ .backdrop { display: block; }
+
+    /* Mobile drawer */
+    .mobile-drawer {
+        position: fixed;
+        top: 0; left: 0;
+        width: 280px;
+        height: 100vh;
+        background: rgb(20,28,42);
+        border-right: 1px solid rgba(255,255,255,0.1);
+        z-index: 300;
+        overflow-y: auto;
+        padding-bottom: 2rem;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        display: block;
+    }
+    .menu-toggle-input:checked ~ .mobile-drawer { transform: translateX(0); }
+
+    .drawer-header {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 1rem 1rem 0.75rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .drawer-title { font-size: 0.9rem; font-weight: 600; color: white; flex: 1; }
+
+    .close-btn {
+        color: rgba(255,255,255,0.5);
+        font-size: 1.1rem;
+        cursor: pointer;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        min-width: 44px; min-height: 44px;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .close-btn:hover { color: white; background: rgba(255,255,255,0.08); }
+
+    .drawer-links { list-style: none; padding: 0.5rem 0; }
+
+    .drawer-link {
+        display: block; width: 100%;
+        padding: 0.75rem 1.25rem;
+        color: rgba(255,255,255,0.75);
+        font-size: 0.95rem;
+        text-decoration: none;
+        transition: all 0.15s; min-height: 44px;
+    }
+    .drawer-link:hover { background: rgba(255,255,255,0.06); color: white; }
+    .drawer-link.active { color: #fb923c; background: rgba(232,93,4,0.12); border-left: 3px solid #e85d04; padding-left: calc(1.25rem - 3px); }
+    .drawer-link.sub { font-size: 0.85rem; padding-left: 1.5rem; color: rgba(255,255,255,0.55); }
+
+    .drawer-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 0.5rem 0; }
+
+    .drawer-section-label {
+        font-size: 0.7rem; text-transform: uppercase;
+        letter-spacing: 0.1em; color: rgba(255,255,255,0.35);
+        padding: 0.5rem 1.25rem 0.25rem; font-weight: 600;
+    }
+
+    .drawer-lang-list { list-style: none; padding: 0.25rem 0; }
+
+    .drawer-lang-option {
+        display: flex; align-items: center; gap: 0.6rem;
+        padding: 0.6rem 1.25rem;
+        color: rgba(255,255,255,0.7);
+        text-decoration: none; font-size: 0.9rem;
+        transition: all 0.15s; min-height: 44px;
+    }
+    .drawer-lang-option:hover { background: rgba(255,255,255,0.06); color: white; }
+    .drawer-lang-option.selected { color: #7dd3fc; }
+
+    .drawer-cta { padding: 1rem 1.25rem 0.5rem; }
+
+    .desktop-only { display: flex; }
+    .mobile-only { display: none; }
+
+    @media (max-width: 768px) {
+        .desktop-menu { display: none; }
+        .desktop-only { display: none; }
+        .mobile-only { display: flex; }
+        nav { padding: 0 1rem; }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+        .desktop-menu { display: flex; }
+        .nav-link { font-size: 0.78rem; padding: 0.4rem 0.5rem; }
+        .mobile-only { display: none; }
+    }
 </style>

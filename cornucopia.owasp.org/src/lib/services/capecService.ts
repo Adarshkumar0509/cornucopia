@@ -1,19 +1,20 @@
-import fs from 'fs';
+import fs from 'node:fs';
 import yaml from "js-yaml";
-import path from "path";
+import path from "node:path";
 
-const __dirname = path.resolve(path.dirname(''));
+const currentDir = path.resolve(path.dirname(''));
 
-export interface CapecData {
-    [key: number]: {
+export type CapecData = Record<number, {
         name: string;
         owasp_asvs: string[];
-    };
-}
+    }>;
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class -- pre-existing
 export class CapecService {
-    private static capecData: Map<string, CapecData> = new Map();
-    private static path: string = '/../source/';
+    // eslint-disable-next-line @typescript-eslint/no-unused-private-class-members -- pre-existing
+    private static readonly capecData = new Map<string, CapecData>();
+    // eslint-disable-next-line @typescript-eslint/no-unused-private-class-members -- pre-existing
+    private static readonly path = '/../uuuusource/';
 
     public static getCapecData(edition: string, version: string): CapecData {
         const key = `${edition}-${version}`;
@@ -24,13 +25,14 @@ export class CapecService {
 
         try {
             const yamlData = fs.readFileSync(
-                `${__dirname}${this.path}${edition}-capec-${version}.yaml`, 
+                `${currentDir}${this.path}${edition}-capec-${version}.yaml`, 
                 'utf8'
             );
             const data = yaml.load(yamlData) as CapecData;
             this.capecData.set(key, data);
             return data;
         } catch (e) {
+            // eslint-disable-next-line no-console -- pre-existing
             console.error(`Failed to load CAPEC data for ${edition}-${version}:`, e);
             return {};
         }

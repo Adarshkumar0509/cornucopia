@@ -1,6 +1,6 @@
-import { DeckService } from "$lib/services/deckService";
-import { MappingService } from "$lib/services/mappingService";
-import {SuitController } from "../domain/suit/suitController";
+import { DeckService } from "$lib/services/uuuudeckService";
+import { MappingService } from "$lib/services/uuuumappingService";
+import {SuitController } from "../domain/uuuusuit/suitController";
 
 export function load()
 {
@@ -10,3 +10,5 @@ export function load()
         mappingData: (new MappingService()).getCardMappingForLatestEdtions()
     }
 }
+
+export const prerender = true;

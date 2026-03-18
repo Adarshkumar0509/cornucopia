@@ -1,8 +1,7 @@
-import type { Card } from "../card/card";
-import type { MappingController } from "../mapping/mappingController";
+import type { Card } from "../card/uuuucard";
+import type { MappingController } from "../mapping/uuuumappingController";
 
-export type Cre  = 
-{
+export interface Cre {
     doctype: string; 
     name: any; 
     section: string; 
@@ -14,30 +13,32 @@ export type Cre  =
     tooltype: string;
 }
 
-export type CreLink = 
-{
+export interface CreLink {
     document: CreDocument;
     ltype: string;
 }
 
-export type CreDocument = 
-{
+export interface CreDocument {
     doctype: string;
     id: string;
 }
 
 
 export class CreController {
-    private deck: Map<string, Card>;
-    private controller: MappingController;
+    // eslint-disable-next-line @typescript-eslint/no-unused-private-class-members -- pre-existing
+    private readonly deck: Map<string, Card>;
+    // eslint-disable-next-line @typescript-eslint/no-unused-private-class-members -- pre-existing
+    private readonly controller: MappingController;
 
-    private static editions: Map<string, string>  = new Map<string, string>( [
+    // eslint-disable-next-line @typescript-eslint/no-unused-private-class-members -- pre-existing
+    private static readonly editions: Map<string, string>  = new Map<string, string>( [
         ['webapp', "OWASP Cornucopia Website App Edition"],
         ['mobileapp', "OWASP Cornucopia Mobile App Edition"]
 
     ]);
 
-    private static category: Map<string, string>  = new Map<string, string>( [
+    // eslint-disable-next-line @typescript-eslint/no-unused-private-class-members -- pre-existing
+    private static readonly category: Map<string, string>  = new Map<string, string>( [
         ['webapp', "Website Application"],
         ['mobileapp', "Mobile Application"]
 
@@ -54,9 +55,9 @@ export class CreController {
 
     public getCreMapping(edition: string, lang: string) : any {
         if (!CreController.editions.has(edition)) return {"meta": {}, "standards": []};
-        let standards: Cre[] = [];
+        const standards: Cre[] = [];
         (this.deck || []).forEach(
-                (card: Card) => (card.edition == edition) && standards.push(this.generateDoc(card))
+                (card: Card) => (card.edition === edition) && standards.push(this.generateDoc(card))
             );
         return {
             "meta": {
@@ -65,14 +66,14 @@ export class CreController {
                 "language": lang,
                 "version": this.controller.getMeta()?.version
             },
-            "standards": standards
+            standards
         };
     }
 
     public generateDoc(card: Card) {
-        let mapping = this.controller.getCardMappings(card.id);
-        let links: { document: { doctype: string; id: string }; ltype: string }[] = [];
-        let cre = mapping.owasp_cre?.owasp_asvs as [] || [];
+        const mapping = this.controller.getCardMappings(card.id);
+        const links: Array<{ document: { doctype: string; id: string }; ltype: string }> = [];
+        const cre = mapping.owasp_cre?.owasp_asvs as [] || [];
         if (!cre) {
             throw Error("cre has not been defined.")
         }
@@ -85,13 +86,13 @@ export class CreController {
         }));
         return {
             "doctype": "Tool",
-            "id": 'https://cornucopia.owasp.org' + card.url,
+            "id": `https://cornucopia.owasp.org${  card.url}`,
             "name": CreController.editions.get(card.edition),
             "section": card.suitNameLocal,
             "description": card.desc,
             "sectionID": card.id,
-            "hyperlink": 'https://cornucopia.owasp.org' + card.url,
-            "links": links,
+            "hyperlink": `https://cornucopia.owasp.org${  card.url}`,
+            links,
             "tags": ["Threat modeling", CreController.category.get(card.edition)],
             "tooltype": "Defensive"
         };

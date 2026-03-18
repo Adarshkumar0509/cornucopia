@@ -1,5 +1,4 @@
-import { FileSystemHelper } from '$lib/filesystem/fileSystemHelper.js'
-import { getAuthors } from '../../domain/author/authorController.js'
+import { getAuthors } from '../../uuuudomain/author/uuuuauthorController.js'
 
 export function load({params})
 {

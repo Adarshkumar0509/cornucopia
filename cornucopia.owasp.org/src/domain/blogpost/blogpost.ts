@@ -1,5 +1,4 @@
-export type Blogpost =
-{ 
+export interface Blogpost { 
     title : string,
     path : string,
     author : string,

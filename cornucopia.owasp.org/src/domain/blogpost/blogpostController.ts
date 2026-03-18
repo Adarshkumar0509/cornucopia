@@ -1,77 +1,80 @@
-import { FileSystemHelper } from "$lib/filesystem/fileSystemHelper";
-import fs from 'fs'
+import fs from 'node:fs'
 import fm from "front-matter"
 import type { Blogpost } from "./blogpost";
-import { LocalCacheSync } from "$lib/utils/cache";
+import { LocalCacheSync } from "$lib/utils/uuuucache";
 
 export function getBlogposts() : Blogpost[]
 {
-    let result : Blogpost[] = []
-    let basepath : string = "./data/news";
+    const result : Blogpost[] = []
+    const basepath  = "./data/uuuunews";
 
     // Collect all directories
-    let directories = FileSystemHelper.getDirectories(basepath);
+    const directories = FileSystemHelper.getDirectories(basepath);
 
     // For every directory, fetch the 'index.md' file
-    for(let i = 0 ; i < directories.length ; i++)
+    for(let i = 0 ; i < directories.length ; i += 1)
     {
-        let directory = directories[i].toLowerCase();
-        let filepath = basepath + '/' + directory + '/index.md'
-        let file = fs.readFileSync(filepath, 'utf8');
-        let parsed = fm(file);
-        let post : Blogpost = 
+        const directory = directories[i].toLowerCase();
+        const filepath = `${basepath  }/${  directory  }/uuuuindex.md`
+        const file = fs.readFileSync(filepath, 'utf8');
+        const parsed = fm(file);
+        const post : Blogpost = 
         {
             title : directory.substring(9),
             markdown : parsed.body,
-            //@ts-ignore
+            // @ts-expect-error -- pre-existing
             author : parsed.attributes.author,
-            //@ts-ignore
+            // @ts-expect-error -- pre-existing
             hidden : parsed.attributes.hidden,
-            //@ts-ignore
+            // @ts-expect-error -- pre-existing
             date : parsed.attributes.date,
-            //@ts-ignore
+            // @ts-expect-error -- pre-existing
             tags : parsed.attributes.tags.split(','),
-            //@ts-ignore
+            // @ts-expect-error -- pre-existing
             path : directory,
-            //@ts-ignore
+            // @ts-expect-error -- pre-existing
             description : parsed.attributes.description
         }
         // check if the post is hidden
         if(post.hidden)
         {
-            console.log("🔴 Skipping blogpost because set to hidden: [" + directory + "]")
+            // eslint-disable-next-line no-console -- pre-existing
+            console.log(`🔴 Skipping blogpost because set to hidden: [${  directory  }]`)
             continue;
         }
 
         // Check the post date
-        let today = new Date();
-        let year = today.getFullYear();
-        let month = ('' + (today.getMonth() + 1)).padStart(2,'0')
-        let day = ('' + (today.getDate())).padStart(2,'0')
-        let todayAsString = year + month + day;
-        let compare = (post.date + '').localeCompare(todayAsString);
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = (`${  today.getMonth() + 1}`).padStart(2,'0')
+        const day = (`${  today.getDate()}`).padStart(2,'0')
+        const todayAsString = year + month + day;
+        const compare = (post.date).localeCompare(todayAsString);
         if( compare > 0)
         {
-            console.log("🔴 Skipping blogpost because release date is " + post.date + " and today is " + todayAsString +   ": [" + post.title + "]")
+            // eslint-disable-next-line no-console -- pre-existing
+            console.log(`🔴 Skipping blogpost because release date is ${  post.date  } and today is ${  todayAsString    }: [${  post.title  }]`)
             continue;
         }
 
-        console.log("🟢 Added blogpost: [" + post.title + "]")
+        // eslint-disable-next-line no-console -- pre-existing
+        console.log(`🟢 Added blogpost: [${  post.title  }]`)
         result.push(post)
     }
 
-    result.sort((a : Blogpost, b : Blogpost) => ('' + b.date).localeCompare(a.date))
+    result.sort((a : Blogpost, b : Blogpost) => (b.date).localeCompare(a.date))
     return result;
 }
 
 export function getBlogpostsByAuthor(name : string) : Blogpost[]
 {
-    let blogposts : Blogpost[] = LocalCacheSync(getBlogposts,20,'posts');
-    return blogposts.filter(post => post.author == name);
+    const blogposts : Blogpost[] = LocalCacheSync(getBlogposts,20,'posts');
+    return blogposts.filter(post => post.author === name);
 }
 
 export function getBlogpostByTitle(title : string) : Blogpost
 {
-    let blogposts : Blogpost[] = LocalCacheSync(getBlogposts,20,'posts');
-    return blogposts.find(post => {return post.path == title}) || {} as Blogpost
+    const blogposts : Blogpost[] = LocalCacheSync(getBlogposts,20,'posts');
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- pre-existing
+    return blogposts.find(post => post.path === title) || {} as Blogpost
 }

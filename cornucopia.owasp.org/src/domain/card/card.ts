@@ -1,5 +1,4 @@
-export type Card =
-{
+export interface Card {
     id : string,
     edition : string,
     desc: string,

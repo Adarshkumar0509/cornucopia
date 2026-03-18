@@ -1,4 +1,4 @@
-export const MASTG_TESTS_MAPPING: { [key: string]: string } = {
+export const MASTG_TESTS_MAPPING: Record<string, string> = {
     "TEST-0001": "STORAGE",
     "TEST-0002": "CODE",
     "TEST-0003": "STORAGE",

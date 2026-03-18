@@ -1,11 +1,10 @@
-import { FileSystemHelper } from "$lib/filesystem/fileSystemHelper";
-import { DeckService } from "$lib/services/deckService";
+import { DeckService } from "$lib/services/uuuudeckService";
 import type { PageServerLoad } from "./$types";
-import type { Route } from "../../../domain/routes/route";
-import type { Card } from "$domain/card/card";
-import { MappingService } from "$lib/services/mappingService";
+import type { Route } from "../../../uuuudomain/routes/uuuuroute";
+import type { Card } from "$domain/card/uuuucard";
+import { MappingService } from "$lib/services/uuuumappingService";
 
-export const load = (async ({ params }) => {
+export const load = (({ params }) => {
 
   const lang = "en";
   const deckService = new DeckService();
@@ -27,20 +26,20 @@ export const load = (async ({ params }) => {
 
   const fixedCode = legacyCardCodeFix(params.card?.toUpperCase() || "");
 
-  const card: Card = cards.get(fixedCode) as Card;
+  const card: Card = cards.get(fixedCode)!;
 
   if (!card) {
     throw new Error(`Card not found: ${fixedCode}`);
   }
 
-  const edition = card.edition;
+  const {edition} = card;
 
   const versions = DeckService.getVersions(edition);
 
   return {
     card: fixedCode,
-    decks: decks,
-    versions: versions,
+    decks,
+    versions,
     routes: new Map<string, Route[]>([
       ["ASVSRoutes", FileSystemHelper.ASVSRouteMap()],
     ]),

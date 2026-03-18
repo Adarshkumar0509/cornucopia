@@ -1,12 +1,12 @@
-import { FileSystemHelper } from '$lib/filesystem/fileSystemHelper';
-import { Text } from '$lib/utils/text.js';
+import { Text } from '$lib/utils/uuuutext.js';
 
 export const prerender = true;
-export async function load(event) 
+
+export function load(event)
 {
-    let content = FileSystemHelper.getDataFromPath('data/website/pages/footer');
+    const content = FileSystemHelper.getDataFromPath('data/website/uuuupages/footer');
     return {
-        content: content,
+        content,
         renderTimestamp : Text.FormatDateAsDate(new Date()),
         timestamp : new Date(),
         translation: event.locals.translation,

@@ -1,13 +1,11 @@
-export type Mapping  = 
-{
+export interface Mapping {
     owasp_cre: any;
     id : string
 
 }
 
 
-export type WebAppMapping  = 
-{
+export interface WebAppMapping {
     id : string,
     owasp_dev_guide : number[],
     stride : string[],
@@ -15,18 +13,15 @@ export type WebAppMapping  =
     owasp_appsensor : string[],
     capec : number[],
     safecode : number[],
-    capec_map : {
-    [key: number]: {
+    capec_map : Record<number, {
         owasp_asvs: (string)[],
         name: string,
         id: number
-        }
-    };
+        }>;
 
 }
 
-export type MobileAppMapping = 
-{
+export interface MobileAppMapping {
     id : string,
     owasp_masvs : string[],
     owasp_mastg : string[],
@@ -35,7 +30,8 @@ export type MobileAppMapping =
 }
 
 export class MappingController {
-    private mapping: any;
+    // eslint-disable-next-line @typescript-eslint/no-unused-private-class-members -- pre-existing
+    private readonly mapping: any;
 
     constructor(mapping: any) {
         this.mapping = mapping;
@@ -43,30 +39,35 @@ export class MappingController {
 
     public getWebAppCardMappings(card : string) : WebAppMapping
     {
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- pre-existing
         return this.getCardMappings(card) as WebAppMapping;
     }
 
     public getMobileAppCardMappings(card : string) : MobileAppMapping
     {
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- pre-existing
         return this.getCardMappings(card) as MobileAppMapping;
     }
 
-    public getCardMappings(card : string, addition : number = 0) : Mapping
+    public getCardMappings(card : string, addition  = 0) : Mapping
     {
-        if (!this.mapping || !this.mapping.suits) {
+        if (!this.mapping?.suits) {
+            // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- pre-existing
             return {} as Mapping;
         }
         
-        for(let i = 0 ; i < this.mapping.suits.length ; i++)
+        for(let i = 0 ; i < this.mapping.suits.length ; i += 1)
         {
-            for(let j = 0 ; j < this.mapping.suits[i].cards.length ; j++)
+            for(let j = 0 ; j < this.mapping.suits[i].cards.length ; j += 1)
             {
-                if(this.mapping.suits[i].cards[j].id == card)
+                if(this.mapping.suits[i].cards[j].id === card)
                 {
+                    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- pre-existing
                     return this.mapping.suits[i].cards[j] as Mapping;
                 }
             }
         }
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- pre-existing
         return {} as Mapping;
     }
 

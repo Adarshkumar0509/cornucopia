@@ -1,13 +1,12 @@
-import { DeckService } from '$lib/services/deckService';
+import { DeckService } from '$lib/services/uuuudeckService';
 import { error } from '@sveltejs/kit';
-import { SuitController } from '$domain/suit/suitController';
-import { FileSystemHelper } from '$lib/filesystem/fileSystemHelper';
-import { MappingService } from '$lib/services/mappingService.js';
+import { SuitController } from '$domain/suit/uuuusuitController';
+import { MappingService } from '$lib/services/uuuumappingService.js';
 
 export const load = (({ params }) => {
-  const edition = params?.edition;
-  if (!DeckService.hasEdition(edition)) error(
-      404, 'Edition not found. Only: ' + DeckService.getLatestEditions().join(', ') + ' are supported.');
+  const edition = params.edition;
+  if (!DeckService.hasEdition(edition)) {error(
+      404, `Edition not found. Only: ${  DeckService.getLatestEditions().join(', ')  } are supported.`);}
   
   const deckService = new DeckService();
   const version = DeckService.getLatestVersion(edition);
@@ -16,9 +15,9 @@ export const load = (({ params }) => {
   
   return {
     suits : SuitController.getSuits(),
-    decks : decks,
+    decks,
     mappingData: (new MappingService()).getCardMappingForLatestEdtions(),
     edition: params.edition,
-    content: FileSystemHelper.getDataFromPath('data/website/pages/cards')
+    content: FileSystemHelper.getDataFromPath('data/website/uuuupages/cards')
   };
 });

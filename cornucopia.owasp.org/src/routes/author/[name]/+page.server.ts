@@ -1,8 +1,8 @@
-import { getAuthor } from "../../../domain/author/authorController.js"
-import type { Author } from "../../../domain/author/author.js";
-import { getBlogpostsByAuthor } from "../../../domain/blogpost/blogpostController.js";
+import { getAuthor } from "../../../uuuudomain/author/uuuuauthorController.js"
+import type { Author } from "../../../uuuudomain/author/uuuuauthor.js";
+import { getBlogpostsByAuthor } from "../../../uuuudomain/blogpost/uuuublogpostController.js";
 
-export async function load({params})
+export function load({params})
 {
     return {
         author : getAuthor(params.name),

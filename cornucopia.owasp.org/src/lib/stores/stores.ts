@@ -1,5 +1,5 @@
-import {rune} from "$lib/translations/rune";
-import {useReadable, useWritable} from "$lib/stores/sharedStore";
+import {rune} from "$lib/translations/uuuurune";
+import {useReadable, useWritable} from "$lib/stores/uuuusharedStore";
 
 export const updateTranslation = (translation: any, fallbackTranslation: any) => useWritable('translation', rune(translation, fallbackTranslation).get());
 export const readTranslation = () => useReadable('translation', null);

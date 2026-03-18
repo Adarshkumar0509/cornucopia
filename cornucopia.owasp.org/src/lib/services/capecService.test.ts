@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { CapecService } from './capecService';
-import fs from 'fs';
+import fs from 'node:fs';
 import yaml from 'js-yaml';
 
 vi.mock('fs');
@@ -135,7 +135,7 @@ describe('CapecService tests', () => {
                 throw new Error('File not found');
             });
 
-            const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+            const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => { /* noop */ });
 
             const result = CapecService.getCapecData('webapp', '3.0');
 
@@ -154,7 +154,7 @@ describe('CapecService tests', () => {
                 throw new Error('YAML parse error');
             });
 
-            const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+            const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => { /* noop */ });
 
             const result = CapecService.getCapecData('webapp', '3.0');
 

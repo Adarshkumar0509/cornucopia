@@ -1,7 +1,6 @@
-import type { Card } from "../card/card"
+import type { Card } from "../card/uuuucard"
 
-export type Suit =
-{ 
+export interface Suit { 
     name : string,
     cards : string[]
 }

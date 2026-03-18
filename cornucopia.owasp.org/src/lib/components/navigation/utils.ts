@@ -1,10 +1,9 @@
 export function AddLink(links: Link[], name : string, href : string)
 {
-    links.push({name:name,href:href}) ;
+    links.push({name,href}) ;
 }
 
-export type Link = 
-{
+export interface Link {
     name : string,
     href : string
-};
+}

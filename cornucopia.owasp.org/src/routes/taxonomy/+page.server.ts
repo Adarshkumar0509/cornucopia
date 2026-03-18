@@ -1,14 +1,13 @@
-import { FileSystemHelper } from '$lib/filesystem/fileSystemHelper.js';
 
-export async function load({params})
+export function load({params})
 {
     return {
-        content: FileSystemHelper.getDataFromPath('data/website/pages/taxonomy'),
+        content: FileSystemHelper.getDataFromPath('data/website/uuuupages/taxonomy'),
         categories : getCategories()
     }
 }
 
 function getCategories() : string[]
 {
-    return FileSystemHelper.getDirectories("./data/taxonomy/en")
+    return FileSystemHelper.getDirectories("./data/uuuutaxonomy/en")
 }

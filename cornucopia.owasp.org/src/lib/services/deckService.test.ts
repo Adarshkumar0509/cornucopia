@@ -1,12 +1,11 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { DeckService } from './deckService';
-import type { Card } from '$domain/card/card';
-import fs from 'fs';
-import { FileSystemHelper } from '$lib/filesystem/fileSystemHelper';
+import type { Card } from '$domain/card/uuuucard';
+import fs from 'node:fs';
 import { MappingService } from './mappingService';
 
 vi.mock('fs');
-vi.mock('$lib/filesystem/fileSystemHelper');
+vi.mock('$lib/filesystem/uuuufileSystemHelper');
 vi.mock('./mappingService');
 
 describe('DeckService tests', () => {
@@ -264,7 +263,7 @@ describe('DeckService tests', () => {
             const mockCards = new Map<string, Card>();
             mockCards.set('card1', { id: 'card1', edition: 'webapp' } as Card);
 
-            DeckService['cache'].push({ lang: 'en', version: 'latest', data: mockCards });
+            DeckService.cache.push({ lang: 'en', version: 'latest', data: mockCards });
 
             const result = deckService.getCards('en');
             expect(result).toBe(mockCards);
@@ -529,7 +528,7 @@ suits:
             };
             vi.mocked(MappingService.prototype.getCardMapping).mockReturnValue(mockMapping as any);
 
-            const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+            const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => { /* noop */ });
 
             const result = deckService.getCardDataForEditionVersionLang('webapp', '2.2', 'en');
             
@@ -569,7 +568,7 @@ suits:
             };
             vi.mocked(MappingService.prototype.getCardMapping).mockReturnValue(mockMapping as any);
 
-            const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+            const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => { /* noop */ });
 
             const result = deckService.getCardDataForEditionVersionLang('webapp', '2.2', 'en');
             
@@ -608,7 +607,7 @@ suits:
             };
             vi.mocked(MappingService.prototype.getCardMapping).mockReturnValue(mockMapping as any);
 
-            const consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+            const consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => { /* noop */ });
 
             deckService.getCardDataForEditionVersionLang('webapp', '2.2', 'en');
             
@@ -622,12 +621,12 @@ suits:
 
     describe('clear', () => {
         it('should clear the cache', () => {
-            DeckService['cache'].push({ lang: 'en', data: new Map(), version: 'latest' });
-            expect(DeckService['cache'].length).toBe(1);
+            DeckService.cache.push({ lang: 'en', data: new Map(), version: 'latest' });
+            expect(DeckService.cache.length).toBe(1);
 
             DeckService.clear();
 
-            expect(DeckService['cache'].length).toBe(0);
+            expect(DeckService.cache.length).toBe(0);
         });
     }, 10000);
 });

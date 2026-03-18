@@ -2,7 +2,7 @@ import {expect, describe, it} from 'vitest';
 import { MappingService } from './mappingService';
 
 describe('MappingService tests', () => {
-    it("should return card mapping data.", async () => {
+    it("should return card mapping data.", () => {
         expect((new MappingService()).getCardMappingForLatestEdtions()).toBeDefined();
         MappingService.clear();
         expect((new MappingService()).getCardMappingForAllVersions().get('webapp-2.2')).toBeDefined();

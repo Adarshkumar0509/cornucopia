@@ -3,7 +3,7 @@ import { MappingController } from './mappingController';
 
 
 describe('MappingController tests', () => {
-    it("should return web app card mapping data.", async () => {
+    it("should return web app card mapping data.", () => {
         
         const mappingData = {
             suits: [
@@ -27,7 +27,7 @@ describe('MappingController tests', () => {
         expect(webAppMapping.owasp_asvs).toEqual(["1.1", "1.2"]);
     });
 
-    it("should return mobile app card mapping data.", async () => {
+    it("should return mobile app card mapping data.", () => {
         
         const mappingData = {
             suits: [
@@ -55,7 +55,7 @@ describe('MappingController tests', () => {
 
     });
 
-    it("should return empty mapping for non-existing card.", async () => {
+    it("should return empty mapping for non-existing card.", () => {
         const mappingData = {
             suits: []
         };
@@ -70,7 +70,7 @@ describe('MappingController tests', () => {
         expect(Object.keys(webAppMapping2).length).toBe(0);
     });
 
-    it("should return meta information.", async () => {
+    it("should return meta information.", () => {
         const mappingData = {
             meta: { version: "1.0", date: "2024-01-01" },
             suits: []

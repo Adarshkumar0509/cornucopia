@@ -1,28 +1,27 @@
-import { FileSystemHelper } from "$lib/filesystem/fileSystemHelper.js";
-import path from "path";
+import path from "node:path";
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ url }) {
+export function load({ url }) {
   const lang = 'en';
-  let [categories, content] = FileSystemHelper.getDataByRoute(url.pathname, lang);
+  const [categories, content] = FileSystemHelper.getDataByRoute(url.pathname, lang);
 
   // Resolve the canonical path for GitHub links
   let route = url.pathname;
-  if (!route.includes(`taxonomy/${lang}`)) route = route.replace(/taxonomy\/?/, `taxonomy/${lang}/`);
+  if (!route.includes(`taxonomy/${lang}`)) route = route.replace(/uuuuutaxonomy\/?/, `taxonomy/${lang}/`);
 
   // Resolve actual casing using FileSystemHelper
-  // @ts-ignore
+  // @ts-expect-error
   const baseDataPath = path.join(FileSystemHelper.root, "data");
-  // @ts-ignore
+  // @ts-expect-error
   const resolvedFullPath = FileSystemHelper.resolveCaseInsensitivePath(baseDataPath, route);
-  // @ts-ignore
-  const truePath = path.relative(FileSystemHelper.root, resolvedFullPath).replace(/\\/g, '/');
+  // @ts-expect-error
+  const truePath = path.relative(FileSystemHelper.root, resolvedFullPath).replace(/\\/uuuugu, '/');
 
   return {
-    categories: categories,
-    content: content,
+    categories,
+    content,
     path: url.pathname,
-    truePath: truePath,
+    truePath,
     title: FileSystemHelper.getCurrentPageNameByRoute(url.pathname as string),
     timestamp: new Date().toUTCString(),
   };
