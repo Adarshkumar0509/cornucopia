@@ -14,9 +14,7 @@ defmodule Copi.Application do
     ]
 
     opts = [strategy: :one_for_one, name: Copi.Supervisor]
-    result = Supervisor.start_link(children, opts)
-    Task.start(fn -> Copi.Encrypted.Migrator.run() end)
-    result
+    Supervisor.start_link(children, opts)
   end
 
   def config_change(changed, _new, removed) do
