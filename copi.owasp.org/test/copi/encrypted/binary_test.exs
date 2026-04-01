@@ -1,6 +1,5 @@
 defmodule Copi.Encrypted.BinaryTest do
   use ExUnit.Case, async: true
-
   alias Copi.Encrypted.Binary, as: EncryptedBinary
 
   setup do
@@ -60,7 +59,6 @@ defmodule Copi.Encrypted.BinaryTest do
     {:ok, blob} = EncryptedBinary.dump("secret")
     <<header::binary-32, byte, rest::binary>> = blob
     tampered = header <> <<Bitwise.bxor(byte, 0xFF)>> <> rest
-
     assert_raise RuntimeError, fn ->
       EncryptedBinary.load(tampered)
     end
@@ -69,7 +67,6 @@ defmodule Copi.Encrypted.BinaryTest do
   test "wrong key raises on load" do
     {:ok, blob} = EncryptedBinary.dump("secret")
     System.put_env("COPI_ENCRYPTION_KEY", Base.encode64(:crypto.strong_rand_bytes(32)))
-
     assert_raise RuntimeError, fn ->
       EncryptedBinary.load(blob)
     end
@@ -77,9 +74,11 @@ defmodule Copi.Encrypted.BinaryTest do
 
   test "missing key raises on dump" do
     System.delete_env("COPI_ENCRYPTION_KEY")
-
+    Application.delete_env(:copi, :encryption_key)
     assert_raise RuntimeError, fn ->
       EncryptedBinary.dump("anything")
     end
+  after
+    Application.put_env(:copi, :encryption_key, "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI=")
   end
 end
